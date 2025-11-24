@@ -9,7 +9,7 @@ import ImageFan from './components/ImageFan'
 function App() {
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 overflow-x-visible">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Hero Content */}
           <motion.div
@@ -43,7 +43,7 @@ function App() {
         >
           <FeaturesGrid />
         </motion.div>
-        <section className="py-20">
+        <section className="py-20 overflow-x-visible">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 text-gray-900">Captured on <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">Spontaneous</span></h2>
           </div>

@@ -32,8 +32,8 @@ const ImageFan = ({ images = [] }) => {
 
   return (
     // Added 'pb-32' to prevent bottom clipping and increased min-height
-    <div className="relative min-h-[700px] w-full flex items-center justify-center overflow-hidden py-20 pb-32">
-      <div className="relative w-full max-w-6xl h-full flex items-center justify-center">
+    <div className="relative min-h-[700px] w-full flex items-center justify-center overflow-x-visible overflow-y-visible py-20 pb-32">
+      <div className="relative w-full max-w-[95vw] h-full flex items-center justify-center px-4 sm:px-8">
         <AnimatePresence>
           {displayImages.map((src, index) => {
             const offset = index - centerIndex
@@ -91,12 +91,6 @@ const ImageFan = ({ images = [] }) => {
                   alt={`Screenshot ${index + 1}`}
                   className="w-full h-full object-cover pointer-events-none select-none"
                   draggable={false}
-                />
-                
-                {/* Dark overlay */}
-                <motion.div 
-                  animate={{ opacity: isHovered ? 0 : 0.4 }}
-                  className="absolute inset-0 bg-black/60 pointer-events-none"
                 />
               </motion.div>
             )
