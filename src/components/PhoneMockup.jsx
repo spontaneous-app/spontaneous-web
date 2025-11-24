@@ -1,5 +1,4 @@
 import { motion, useTransform } from 'framer-motion'
-import { Lightbulb } from 'lucide-react'
 
 const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 0.85 }) => {
   // Calculate image scroll translation

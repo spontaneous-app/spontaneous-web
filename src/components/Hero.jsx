@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
-import WaitlistForm from './WaitlistForm'
 import AppStoreButtons from './AppStoreButtons'
 
 const Hero = () => {

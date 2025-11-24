@@ -1,7 +1,29 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import { Lightbulb, Share2, Award } from 'lucide-react'
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
+
+const featureCards = [
+  {
+    icon: Lightbulb,
+    title: 'Daily Prompts',
+    description: 'Pick one of three whimsical prompts to spark everyday creativity.',
+    gradient: 'from-orange-500 to-amber-500',
+  },
+  {
+    icon: Share2,
+    title: 'Share & Compare',
+    description: 'See how friends interpreted the same prompt in real time.',
+    gradient: 'from-orange-500 to-red-500',
+  },
+  {
+    icon: Award,
+    title: 'Streaks & Awards',
+    description: 'Build streaks and climb the upcoming community leaderboard.',
+    gradient: 'from-orange-400 to-orange-600',
+  },
+]
 
 const PhoneScrollytelling = ({ textColor }) => {
   const phoneSectionRef = useRef(null)
@@ -29,6 +51,22 @@ const PhoneScrollytelling = ({ textColor }) => {
 
   // Line 3: Description (Appears 50% - 60%)
   const t3Y = useTransform(phoneScroll, [0.5, 0.6], [20, 0])
+
+  // Feature reveal timings (after description)
+  const feature1Opacity = useTransform(phoneScroll, [0.6, 0.66], [0, 1])
+  const feature1Y = useTransform(phoneScroll, [0.6, 0.66], [20, 0])
+
+  const feature2Opacity = useTransform(phoneScroll, [0.66, 0.72], [0, 1])
+  const feature2Y = useTransform(phoneScroll, [0.66, 0.72], [20, 0])
+
+  const feature3Opacity = useTransform(phoneScroll, [0.72, 0.78], [0, 1])
+  const feature3Y = useTransform(phoneScroll, [0.72, 0.78], [20, 0])
+
+  const featureAnimations = [
+    { opacity: feature1Opacity, y: feature1Y },
+    { opacity: feature2Opacity, y: feature2Y },
+    { opacity: feature3Opacity, y: feature3Y },
+  ]
 
   return (
     <section 
@@ -125,6 +163,30 @@ const PhoneScrollytelling = ({ textColor }) => {
                   style={{ color: textColor }}
                 />
               </motion.div>
+
+              {/* Feature Callouts */}
+              <div className="mt-10 flex flex-col gap-4">
+                {featureCards.map((feature, index) => {
+                  const Icon = feature.icon
+                  const animation = featureAnimations[index]
+                  return (
+                    <motion.div
+                      key={feature.title}
+                      style={{ opacity: animation.opacity, y: animation.y }}
+                      className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg"
+                    >
+                      <div className={`inline-flex items-center justify-center p-3 rounded-xl bg-gradient-to-br ${feature.gradient} text-white mb-4 shadow-lg`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <h4 className="text-xl font-semibold mb-2 text-white">{feature.title}</h4>
+                      <p className="text-sm text-white/80 leading-relaxed">
+                        {feature.description}
+                      </p>
+                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${feature.gradient} opacity-0 blur-2xl -z-10`} />
+                    </motion.div>
+                  )
+                })}
+              </div>
               
             </div>
           </div>

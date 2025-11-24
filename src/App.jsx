@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import Hero from './components/Hero'
 import PhoneScrollytelling from './components/PhoneScrollytelling'
-import FeaturesGrid from './components/FeaturesGrid'
 import ImageFan from './components/ImageFan'
 import { useScrollAnimations } from './hooks/useScrollAnimations'
 
@@ -45,11 +44,6 @@ function App() {
               images={[ '/sc1.jpg', '/sc6.jpg', '/sc2.jpg', '/sc4.jpg', '/sc5.jpg' ]}
             />
           </motion.div>
-        </section>
-
-        {/* FEATURES */}
-        <section className="py-20 container mx-auto px-4">
-           <FeaturesGrid />
         </section>
 
       </main>
