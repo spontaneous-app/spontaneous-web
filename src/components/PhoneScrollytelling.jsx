@@ -1,7 +1,8 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
+import BubbleReveal from './BubbleReveal'
 
 const FEATURE_CARD_HEIGHT = 'min-h-[330px]'
 
@@ -50,21 +51,22 @@ const PhoneScrollytelling = ({ textColor }) => {
   // Line 3: Description (Appears 50% - 60%)
   const t3Y = useTransform(phoneScroll, [0.5, 0.6], [20, 0])
 
-  // Feature reveal timings (after description)
-  const feature1Opacity = useTransform(phoneScroll, [0.6, 0.66], [0, 1])
-  const feature1Y = useTransform(phoneScroll, [0.6, 0.66], [20, 0])
-
-  const feature2Opacity = useTransform(phoneScroll, [0.66, 0.72], [0, 1])
-  const feature2Y = useTransform(phoneScroll, [0.66, 0.72], [20, 0])
-
-  const feature3Opacity = useTransform(phoneScroll, [0.72, 0.78], [0, 1])
-  const feature3Y = useTransform(phoneScroll, [0.72, 0.78], [20, 0])
-
-  const featureAnimations = [
-    { opacity: feature1Opacity, y: feature1Y },
-    { opacity: feature2Opacity, y: feature2Y },
-    { opacity: feature3Opacity, y: feature3Y },
+  // Feature reveal logic (after description)
+  const featureThresholds = [0.6, 0.66, 0.72]
+  const featureYTransforms = [
+    useTransform(phoneScroll, [0.6, 0.66], [20, 0]),
+    useTransform(phoneScroll, [0.66, 0.72], [20, 0]),
+    useTransform(phoneScroll, [0.72, 0.78], [20, 0]),
   ]
+  const [featureActive, setFeatureActive] = useState([false, false, false])
+
+  useMotionValueEvent(phoneScroll, 'change', (latest) => {
+    setFeatureActive((prev) => {
+      const next = featureThresholds.map((threshold) => latest >= threshold)
+      const hasChanged = next.some((value, index) => value !== prev[index])
+      return hasChanged ? next : prev
+    })
+  })
 
   return (
     <section 
@@ -164,26 +166,30 @@ const PhoneScrollytelling = ({ textColor }) => {
               {/* Feature Callouts */}
               <div className="mt-10 flex flex-col md:flex-row gap-4 md:gap-6 w-full">
                 {featureCards.map((feature, index) => {
-                  const animation = featureAnimations[index]
+                  const yTransform = featureYTransforms[index] || featureYTransforms[featureYTransforms.length - 1]
                   return (
-                    <motion.div
+                    <BubbleReveal
                       key={feature.title}
-                      style={{ opacity: animation.opacity, y: animation.y }}
-                      className={`relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg flex-1 ${FEATURE_CARD_HEIGHT}`}
+                      delay={index * 0.15}
+                      isActive={featureActive[index]}
+                      style={{ y: yTransform }}
+                      className={`flex-1 ${FEATURE_CARD_HEIGHT} flex`}
                     >
-                      <motion.h4 
-                        className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text`}
-                      >
-                        {feature.title}
-                      </motion.h4>
-                      <motion.p 
-                        className="text-sm leading-relaxed"
-                        style={{ color: textColor, opacity: 0.8 }}
-                      >
-                        {feature.description}
-                      </motion.p>
-                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${feature.gradient} opacity-0 blur-2xl -z-10`} />
-                    </motion.div>
+                      <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg flex flex-col h-full">
+                        <motion.h4 
+                          className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text`}
+                        >
+                          {feature.title}
+                        </motion.h4>
+                        <motion.p 
+                          className="text-sm leading-relaxed"
+                          style={{ color: textColor, opacity: 0.8 }}
+                        >
+                          {feature.description}
+                        </motion.p>
+                        <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${feature.gradient} opacity-0 blur-2xl -z-10`} />
+                      </div>
+                    </BubbleReveal>
                   )
                 })}
               </div>
