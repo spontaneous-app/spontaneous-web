@@ -4,6 +4,7 @@ import PhoneScrollytelling from './components/PhoneScrollytelling'
 import ImageFan from './components/ImageFan'
 import ScrollIndicator from './components/ScrollIndicator'
 import { useScrollAnimations } from './hooks/useScrollAnimations'
+import Footer from './components/Footer'
 
 function App() {
   const { containerRef, backgroundColor, textColor } = useScrollAnimations()
@@ -37,6 +38,7 @@ function App() {
           />
         </div>
 
+        <Footer />
       </main>
     </motion.div>
   )

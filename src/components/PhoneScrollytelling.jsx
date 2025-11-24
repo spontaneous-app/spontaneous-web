@@ -44,11 +44,11 @@ const PhoneScrollytelling = ({ textColor }) => {
   const t3Y = useTransform(phoneScroll, [0.5, 0.6], [20, 0])
 
   // Feature Cards logic
-  const featureThresholds = [0.6, 0.66, 0.72]
+  const featureThresholds = [0.6, 0.65, 0.70]
   const featureYTransforms = [
-    useTransform(phoneScroll, [0.6, 0.66], [20, 0]),
-    useTransform(phoneScroll, [0.66, 0.72], [20, 0]),
-    useTransform(phoneScroll, [0.72, 0.78], [20, 0]),
+    useTransform(phoneScroll, [0.6, 0.65], [20, 0]),
+    useTransform(phoneScroll, [0.65, 0.70], [20, 0]),
+    useTransform(phoneScroll, [0.70, 0.75], [20, 0]),
   ]
   const [featureActive, setFeatureActive] = useState([false, false, false])
 
