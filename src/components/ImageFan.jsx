@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 
 // --- TUNING VARIABLES ---
 const SPACING = 170          // Controls overall width (Higher = Wider)
@@ -11,6 +11,15 @@ const ROTATION_STRENGTH = 8 // Controls how much the sides tilt
 const ImageFan = ({ images = [] }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
+  const containerRef = useRef(null)
+  const [hasAnimatedIn, setHasAnimatedIn] = useState(false)
+  const isInView = useInView(containerRef, { once: true, margin: '-10% 0px -10% 0px' })
+
+  useEffect(() => {
+    if (isInView) {
+      setHasAnimatedIn(true)
+    }
+  }, [isInView])
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -32,7 +41,10 @@ const ImageFan = ({ images = [] }) => {
 
   return (
     // Added 'pb-32' to prevent bottom clipping and increased min-height
-    <div className="relative min-h-[700px] w-full flex items-center justify-center overflow-x-visible overflow-y-visible py-20 pb-32">
+    <div
+      ref={containerRef}
+      className="relative min-h-[700px] w-full flex items-center justify-center overflow-x-visible overflow-y-visible py-20 pb-32"
+    >
       <div className="relative w-full max-w-[95vw] h-full flex items-center justify-center px-4 sm:px-8">
         <AnimatePresence>
           {displayImages.map((src, index) => {
@@ -59,6 +71,8 @@ const ImageFan = ({ images = [] }) => {
             const scale = isHovered ? 1.15 : 1 - Math.abs(offset) * 0.05
             const zIndex = isHovered ? 50 : 10 - Math.abs(offset)
 
+            const shouldAnimateIn = hasAnimatedIn || isInView
+
             return (
               <motion.div
                 key={src}
@@ -67,8 +81,14 @@ const ImageFan = ({ images = [] }) => {
                 onHoverEnd={() => setHoveredIndex(null)}
                 // Increased width for desktop to match the "wide" vibe
                 className="absolute w-[240px] sm:w-[300px] aspect-[9/15] rounded-[2rem] shadow-2xl border-[6px] border-gray-900 bg-gray-900 cursor-pointer overflow-hidden origin-bottom will-change-transform"
-                initial={false}
+                initial={{
+                  opacity: 0,
+                  y: 200,
+                  scale: 0.8,
+                  rotate: offset * 15,
+                }}
                 animate={{
+                  opacity: shouldAnimateIn ? 1 : 0,
                   rotate: rotation,
                   x: translateX,
                   y: translateY,
@@ -77,9 +97,10 @@ const ImageFan = ({ images = [] }) => {
                 }}
                 transition={{
                   type: 'spring',
-                  stiffness: 200,
-                  damping: 24,
-                  mass: 1
+                  stiffness: 220,
+                  damping: 16,
+                  mass: 1.1,
+                  delay: !hasAnimatedIn && isInView ? index * 0.12 : 0
                 }}
                 whileHover={{
                   boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",

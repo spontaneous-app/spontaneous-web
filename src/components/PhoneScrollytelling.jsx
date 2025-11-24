@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Lightbulb, Share2, Award } from 'lucide-react'
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
 
@@ -8,19 +7,16 @@ const FEATURE_CARD_HEIGHT = 'min-h-[330px]'
 
 const featureCards = [
   {
-    icon: Lightbulb,
     title: 'Daily Prompts',
     description: 'Pick one of three whimsical prompts to spark everyday creativity.',
     gradient: 'from-orange-500 to-amber-500',
   },
   {
-    icon: Share2,
     title: 'Share & Compare',
     description: 'See how friends interpreted the same prompt in real time.',
     gradient: 'from-orange-500 to-red-500',
   },
   {
-    icon: Award,
     title: 'Streaks & Awards',
     description: 'Build streaks and climb the upcoming community leaderboard.',
     gradient: 'from-orange-400 to-orange-600',
@@ -168,7 +164,6 @@ const PhoneScrollytelling = ({ textColor }) => {
               {/* Feature Callouts */}
               <div className="mt-10 flex flex-col md:flex-row gap-4 md:gap-6 w-full">
                 {featureCards.map((feature, index) => {
-                  const Icon = feature.icon
                   const animation = featureAnimations[index]
                   return (
                     <motion.div
@@ -176,12 +171,8 @@ const PhoneScrollytelling = ({ textColor }) => {
                       style={{ opacity: animation.opacity, y: animation.y }}
                       className={`relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg flex-1 ${FEATURE_CARD_HEIGHT}`}
                     >
-                      <div className={`inline-flex items-center justify-center p-3 rounded-xl bg-gradient-to-br ${feature.gradient} text-white mb-4 shadow-lg`}>
-                        <Icon className="w-5 h-5" />
-                      </div>
                       <motion.h4 
-                        className="text-xl font-semibold mb-2"
-                        style={{ color: textColor }}
+                        className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text`}
                       >
                         {feature.title}
                       </motion.h4>
