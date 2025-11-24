@@ -30,34 +30,10 @@ function App() {
         <PhoneScrollytelling textColor={textColor} />
 
         {/* IMAGE FAN */}
-        <section className="py-20 sm:py-32 flex flex-col items-center relative z-30">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-20%" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full"
-          >
-            <div className="text-center mb-12">
-              <motion.h2
-                style={{ color: textColor }}
-                className="text-3xl sm:text-5xl font-bold mb-6"
-              >
-                Captured on 
-                <span className="text-[#F18E48]"
-                  style={{
-                    background: 'linear-gradient(90deg, #F18E48 0%, #ff4d4d 50%, #c026d3 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}> Spontaneous</span>
-              </motion.h2>
-            </div>
-            <ImageFan
-              images={['/sc1.jpg', '/sc6.jpg', '/sc2.jpg', '/sc4.jpg', '/sc5.jpg']}
-            />
-          </motion.div>
-        </section>
+        <ImageFan
+          images={['/sc1.jpg', '/sc6.jpg', '/sc2.jpg', '/sc4.jpg', '/sc5.jpg']}
+          title="Captured on Spontaneous"
+        />
 
       </main>
     </motion.div>
