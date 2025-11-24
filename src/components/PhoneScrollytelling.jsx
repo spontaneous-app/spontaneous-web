@@ -44,7 +44,7 @@ const PhoneScrollytelling = ({ textColor }) => {
             className="relative z-20 flex-shrink-0"
           >
             <div className="scale-100 sm:scale-110 md:scale-125 shadow-2xl shadow-orange-500/20 rounded-[3rem]">
-               <PhoneMockup imageSrc="/iphone_screenshot.png" />
+               <PhoneMockup imageSrc="/long_screenshot.png" scrollProgress={phoneScroll} />
             </div>
           </motion.div>
 
