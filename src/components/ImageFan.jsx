@@ -9,7 +9,9 @@ const ARCH_STRENGTH = 10    // Controls how much the sides drop down (Lower = Fl
 const ROTATION_STRENGTH = 8 // Controls how much the sides tilt
 // -----------------------------------------------
 
-const TEXT_COMPLETE_THRESHOLD = 0.3
+const TEXT_COMPLETE_THRESHOLD = 0.25
+const REVEAL_START = 0.35
+const REVEAL_END = 0.85
 
 const ImageFan = ({
   images = [],
@@ -18,15 +20,12 @@ const ImageFan = ({
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
   const [textComplete, setTextComplete] = useState(false)
+  const [revealedImages, setRevealedImages] = useState(0)
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { margin: '-10% 0px -10% 0px' })
   const { scrollYProgress: localScroll } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
-  })
-
-  useMotionValueEvent(localScroll, 'change', (latest) => {
-    setTextComplete(latest >= TEXT_COMPLETE_THRESHOLD)
   })
 
   useEffect(() => {
@@ -46,6 +45,28 @@ const ImageFan = ({
     : allImages
 
   const centerIndex = Math.floor(displayImages.length / 2)
+  const totalImages = displayImages.length
+  const highlightWord = 'Spontaneous'
+  const hasHighlight = title.includes(highlightWord)
+  const [prefixPart, suffixPart] = hasHighlight ? title.split(highlightWord) : [title, '']
+
+  useMotionValueEvent(localScroll, 'change', (latest) => {
+    setTextComplete(latest >= TEXT_COMPLETE_THRESHOLD)
+
+    if (latest < REVEAL_START) {
+      setRevealedImages((prev) => (prev === 0 ? prev : 0))
+      return
+    }
+
+    const clampedProgress = Math.min(1, Math.max(0, (latest - REVEAL_START) / (REVEAL_END - REVEAL_START)))
+    const nextCount = Math.min(totalImages, Math.ceil(clampedProgress * totalImages))
+
+    setRevealedImages((prev) => (prev === nextCount ? prev : nextCount))
+  })
+
+  useEffect(() => {
+    setRevealedImages(0)
+  }, [totalImages])
 
   return (
     <section
@@ -54,14 +75,45 @@ const ImageFan = ({
     >
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-visible">
         <div className="absolute top-12 left-0 w-full px-4 sm:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.h3 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-              <LetterReveal
-                text={title}
-                scrollProgress={localScroll}
-                startProgress={0}
-                endProgress={0.3}
-              />
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.h3 className="text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-white leading-tight">
+              {hasHighlight ? (
+                <div className="inline-flex flex-wrap items-baseline justify-center gap-4">
+                  {prefixPart.trim() && (
+                    <LetterReveal
+                      text={prefixPart.trim()}
+                      scrollProgress={localScroll}
+                      startProgress={0.02}
+                      endProgress={0.18}
+                    />
+                  )}
+                  <LetterReveal
+                    text={highlightWord}
+                    scrollProgress={localScroll}
+                    startProgress={0.1}
+                    endProgress={0.28}
+                    letterClassName="text-transparent bg-clip-text"
+                    letterStyle={{
+                      backgroundImage: 'linear-gradient(90deg, #F18E48 0%, #ff4d4d 50%, #c026d3 100%)',
+                    }}
+                  />
+                  {suffixPart.trim() && (
+                    <LetterReveal
+                      text={suffixPart.trim()}
+                      scrollProgress={localScroll}
+                      startProgress={0.18}
+                      endProgress={0.32}
+                    />
+                  )}
+                </div>
+              ) : (
+                <LetterReveal
+                  text={title}
+                  scrollProgress={localScroll}
+                  startProgress={0.05}
+                  endProgress={0.25}
+                />
+              )}
             </motion.h3>
           </div>
         </div>
@@ -91,7 +143,7 @@ const ImageFan = ({
               const scale = isHovered ? 1.15 : 1 - Math.abs(offset) * 0.05
               const zIndex = isHovered ? 50 : 10 - Math.abs(offset)
 
-              const shouldAnimateIn = textComplete && isInView
+              const shouldAnimateIn = textComplete && isInView && index < revealedImages
 
               return (
                 <motion.div

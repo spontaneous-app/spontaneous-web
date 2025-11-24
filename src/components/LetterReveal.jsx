@@ -1,7 +1,16 @@
 import { motion, useMotionValueEvent, useTransform } from 'framer-motion'
 import { useState } from 'react'
 
-const LetterReveal = ({ text, scrollProgress, startProgress, endProgress, style, className }) => {
+const LetterReveal = ({
+  text,
+  scrollProgress,
+  startProgress,
+  endProgress,
+  style,
+  className,
+  letterClassName,
+  letterStyle
+}) => {
   const [visibleChars, setVisibleChars] = useState(0)
 
   // Transform scroll progress to letter count
@@ -39,7 +48,8 @@ const LetterReveal = ({ text, scrollProgress, startProgress, endProgress, style,
               return (
                 <motion.span
                   key={`${wordIndex}-${index}`}
-                  className="inline-block"
+                  className={`inline-block ${letterClassName ?? ''}`}
+                  style={letterStyle}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{
                     opacity: isVisible ? 1 : 0,
