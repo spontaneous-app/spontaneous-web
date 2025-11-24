@@ -56,7 +56,7 @@ const PhoneScrollytelling = ({ textColor }) => {
           {/* RIGHT TEXT BLOCK */}
           {/* ALIGNMENT FIX: Changed top-1/2 to top-[25vh] to align with top of phone */}
           <div
-            className="absolute w-full md:w-1/2 right-0 top-[14vh] px-8 md:pl-16 z-10 pointer-events-none"
+            className="absolute w-full md:w-1/2 right-0 top-[18vh] px-8 md:pl-16 z-10 pointer-events-none"
           >
             <div className="max-w-lg ml-auto md:ml-0 text-center md:text-left md:p-0 flex flex-col gap-6">
               
