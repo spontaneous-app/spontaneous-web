@@ -18,14 +18,14 @@ function App() {
   // This creates a "Dark Mode" section for the phone reveal
   const backgroundColor = useTransform(
     globalScroll,
-    [0, 0.15, 0.7, 0.85], 
-    ["#FFFBF7", "#0f172a", "#0f172a", "#FFFBF7"]
+    [0, 0.10, 0.7, 0.80], 
+    ["#FFEFE0", "#182140", "#0f172a", "#FFEFE0"]
   )
   
   // Text Color Transition: Black -> White -> Black
   const textColor = useTransform(
     globalScroll,
-    [0, 0.15, 0.7, 0.85], 
+    [0, 0.15, 0.7, 0.75], 
     ["#0f172a", "#f8fafc", "#f8fafc", "#0f172a"]
   )
 
