@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import Hero from './components/Hero'
 import PhoneScrollytelling from './components/PhoneScrollytelling'
 import ImageFan from './components/ImageFan'
+import ScrollIndicator from './components/ScrollIndicator'
 import { useScrollAnimations } from './hooks/useScrollAnimations'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         {/* HERO */}
         <section className="h-[80vh] flex flex-col items-center justify-center relative">
           <Hero />
+          <ScrollIndicator className="absolute bottom-10" />
         </section>
 
         {/* PHONE SCROLLYTELLING */}
