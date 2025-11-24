@@ -45,18 +45,16 @@ function App() {
         </motion.div>
         <section className="py-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Captured on Spontaneous</h2>
-            <p className="text-gray-400">Hover to see how our community lives in the moment</p>
+            <h2 className="text-3xl font-bold mb-4">Captured on <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">Spontaneous</span></h2>
           </div>
 
           <ImageFan
             images={[
               '/assets/sc1.jpg',
+              '/assets/sc6.jpg',
               '/assets/sc2.jpg',
-              '/assets/sc3.jpg',
               '/assets/sc4.jpg',
               '/assets/sc5.jpg',
-              '/assets/sc6.jpg',
             ]}
           />
         </section>
