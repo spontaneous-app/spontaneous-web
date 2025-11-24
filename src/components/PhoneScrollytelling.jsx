@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, forwardRef } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
@@ -10,8 +10,8 @@ import { useMobile } from '../hooks/useMobile'
 
 const FEATURE_CARD_HEIGHT = 'min-h-[330px]'
 
-const PhoneScrollytelling = ({ textColor }) => {
-  const phoneSectionRef = useRef(null)
+const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
+  const phoneSectionRef = ref || useRef(null)
   const isMobile = useMobile()
   const { scrollYProgress: phoneScroll } = useScroll({
     target: phoneSectionRef,
@@ -262,6 +262,7 @@ const PhoneScrollytelling = ({ textColor }) => {
       </div>
     </section>
   )
-}
+})
 
+PhoneScrollytelling.displayName = 'PhoneScrollytelling'
 export default PhoneScrollytelling

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 
-const ScrollIndicator = ({ className = '', color, style }) => {
+const ScrollIndicator = ({ className = '', color, style, onClick }) => {
   const resolvedColor = color ?? '#0f172a'
   
   return (
@@ -11,12 +11,21 @@ const ScrollIndicator = ({ className = '', color, style }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 1.2, duration: 0.8 }}
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick?.()
+        }
+      }}
     >
       <span className="mb-2 text-[11px]">Scroll For More</span>
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-        className="rounded-full border w-8 h-8 flex items-center justify-center backdrop-blur-sm bg-white/10"
+        className="rounded-full border w-8 h-8 flex items-center justify-center backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-colors"
         style={{ borderColor: resolvedColor }}
       >
         <ChevronDown className="w-4 h-4" style={{ color: resolvedColor }} />
