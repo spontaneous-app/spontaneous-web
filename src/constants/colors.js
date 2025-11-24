@@ -1,6 +1,7 @@
 // Brand colors and gradients
 export const COLORS = {
   orange: '#F18E48',
+  orangeRed: '#F18348',
   red: '#ff4d4d',
   purple: '#c026d3',
   deepNavy: '#090D1F',
