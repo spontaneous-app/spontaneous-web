@@ -4,17 +4,23 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-gray-900 via-blurple-900 to-gray-900 text-white antialiased;
+    /* Changed to a deep Slate-950 (bluish-black) with a subtle top-center spotlight */
+    @apply bg-slate-950 text-white antialiased min-h-screen relative selection:bg-orange-500/30;
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
   }
   
+  /* A more subtle glow for buttons/cards */
   .glow {
-    box-shadow: 0 0 20px rgba(99, 102, 255, 0.5), 0 0 40px rgba(99, 102, 255, 0.3);
+    box-shadow: 0 0 15px rgba(241, 142, 72, 0.3);
+  }
+
+  /* This adds the modern "spotlight" effect behind the Hero text */
+  .bg-spotlight {
+    background: radial-gradient(circle at 50% 0%, rgba(241, 142, 72, 0.15) 0%, transparent 70%);
   }
 }
-

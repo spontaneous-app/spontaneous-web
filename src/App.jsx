@@ -29,7 +29,7 @@ function App() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex justify-center lg:justify-end"
           >
-            <PhoneMockup />
+            <PhoneMockup imageSrc="/assets/screenshot.png" />
           </motion.div>
         </div>
 

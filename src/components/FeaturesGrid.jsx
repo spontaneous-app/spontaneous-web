@@ -1,24 +1,24 @@
 import { motion } from 'framer-motion'
-import { Zap, Clock, Heart } from 'lucide-react'
+import { Lightbulb, Award, Sparkles } from 'lucide-react'
 
 const features = [
   {
-    icon: Zap,
-    title: 'No Filters',
-    description: 'Share authentic moments exactly as they happen. No editing, no perfection—just real life.',
-    color: 'from-yellow-500 to-orange-500',
+    icon: Lightbulb,
+    title: 'Unique Daily Prompts',
+    description: 'See how your friends interpret the same prompt differently. Every perspective is unique, every response is creative.',
+    color: 'from-orange-500 to-amber-500',
   },
   {
-    icon: Clock,
-    title: 'Real Time',
-    description: 'Posts disappear after 24 hours. Live in the moment, not in the past.',
-    color: 'from-blurple-500 to-purple-500',
+    icon: Award,
+    title: 'Custom Badges',
+    description: 'Award badges to your friends\' posts. Celebrate creativity, humor, and those moments that make you smile.',
+    color: 'from-orange-500 to-red-500',
   },
   {
-    icon: Heart,
-    title: 'Memories',
-    description: 'Save your favorite moments privately. Some things are just for you.',
-    color: 'from-pink-500 to-rose-500',
+    icon: Sparkles,
+    title: 'Algorithm-Free',
+    description: 'Zero clutter. No AI content. Just your friends and the prompts that spark real conversations.',
+    color: 'from-orange-400 to-orange-600',
   },
 ]
 
@@ -32,10 +32,10 @@ const FeaturesGrid = () => {
         className="text-center"
       >
         <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-          Why <span className="bg-gradient-to-r from-blurple-400 to-purple-400 bg-clip-text text-transparent">Spontaneous</span>?
+          Why <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">Spontaneous</span>?
         </h2>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          A new way to connect through unfiltered, real-time moments
+          A new way to connect through creativity and genuine moments
         </p>
       </motion.div>
 

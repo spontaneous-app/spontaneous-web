@@ -16,7 +16,7 @@ const WaitlistForm = () => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     setIsLoading(false)
     setIsSubmitted(true)
-    
+
     // Reset after 3 seconds
     setTimeout(() => {
       setIsSubmitted(false)
@@ -35,15 +35,18 @@ const WaitlistForm = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
-            className="w-full pl-12 pr-4 py-4 rounded-xl glass border border-white/20 focus:border-blurple-400 focus:outline-none focus:ring-2 focus:ring-blurple-500/50 transition-all text-white placeholder-gray-400"
+            className="w-full pl-12 pr-4 py-4 rounded-xl glass border border-white/20 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all text-white placeholder-gray-400"
           />
         </div>
         <motion.button
           type="submit"
           disabled={isLoading || isSubmitted}
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
           whileTap={{ scale: 0.98 }}
-          className="px-8 py-4 bg-gradient-to-r from-blurple-600 to-blurple-500 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl glow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[160px]"
+          // CHANGED: Removed solid orange bg. Added white border and subtle text color.
+          className="px-8 py-4 rounded-xl font-medium text-white border border-white/20 
+             hover:border-orange-400/50 hover:text-orange-100 hover:shadow-[0_0_20px_rgba(241,142,72,0.3)] 
+             transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[160px]"
         >
           {isLoading ? (
             <>
@@ -52,11 +55,12 @@ const WaitlistForm = () => {
             </>
           ) : isSubmitted ? (
             <>
-              <Check className="w-5 h-5" />
+              <Check className="w-5 h-5 text-green-400" />
               <span>Joined!</span>
             </>
           ) : (
-            'Join Waitlist'
+            // CHANGED: Added text glow
+            <span className="drop-shadow-sm">Join Waitlist</span>
           )}
         </motion.button>
       </div>

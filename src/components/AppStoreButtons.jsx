@@ -22,7 +22,7 @@ const AppStoreButtons = () => {
             <div className="text-sm font-semibold text-white">App Store</div>
           </div>
         </div>
-        <div className="absolute -top-2 -right-2 px-2 py-1 bg-blurple-500 rounded-full text-xs font-semibold text-white shadow-lg">
+        <div className="absolute -top-2 -right-2 px-2 py-1 bg-orange-500 rounded-full text-xs font-semibold text-white shadow-lg">
           Soon
         </div>
       </motion.div>
@@ -40,7 +40,7 @@ const AppStoreButtons = () => {
             <div className="text-sm font-semibold text-white">Google Play</div>
           </div>
         </div>
-        <div className="absolute -top-2 -right-2 px-2 py-1 bg-blurple-500 rounded-full text-xs font-semibold text-white shadow-lg">
+        <div className="absolute -top-2 -right-2 px-2 py-1 bg-orange-500 rounded-full text-xs font-semibold text-white shadow-lg">
           Soon
         </div>
       </motion.div>
