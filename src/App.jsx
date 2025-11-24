@@ -45,7 +45,7 @@ function App() {
         </motion.div>
         <section className="py-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Captured on <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">Spontaneous</span></h2>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Captured on <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">Spontaneous</span></h2>
           </div>
 
           <ImageFan

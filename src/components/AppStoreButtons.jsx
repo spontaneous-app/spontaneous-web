@@ -15,11 +15,11 @@ const AppStoreButtons = () => {
         whileTap={{ scale: 0.95 }}
         className="relative group"
       >
-        <div className="flex items-center gap-3 px-6 py-3 rounded-xl glass border border-white/20 opacity-50 cursor-not-allowed">
-          <Apple className="w-6 h-6 text-white" />
+        <div className="flex items-center gap-3 px-6 py-3 rounded-xl glass border border-gray-200/50 opacity-50 cursor-not-allowed">
+          <Apple className="w-6 h-6 text-gray-600" />
           <div className="text-left">
-            <div className="text-xs text-gray-400">Download on the</div>
-            <div className="text-sm font-semibold text-white">App Store</div>
+            <div className="text-xs text-gray-500">Download on the</div>
+            <div className="text-sm font-semibold text-gray-900">App Store</div>
           </div>
         </div>
         <div className="absolute -top-2 -right-2 px-2 py-1 bg-orange-500 rounded-full text-xs font-semibold text-white shadow-lg">
@@ -33,11 +33,11 @@ const AppStoreButtons = () => {
         whileTap={{ scale: 0.95 }}
         className="relative group"
       >
-        <div className="flex items-center gap-3 px-6 py-3 rounded-xl glass border border-white/20 opacity-50 cursor-not-allowed">
-          <Smartphone className="w-6 h-6 text-white" />
+        <div className="flex items-center gap-3 px-6 py-3 rounded-xl glass border border-gray-200/50 opacity-50 cursor-not-allowed">
+          <Smartphone className="w-6 h-6 text-gray-600" />
           <div className="text-left">
-            <div className="text-xs text-gray-400">Get it on</div>
-            <div className="text-sm font-semibold text-white">Google Play</div>
+            <div className="text-xs text-gray-500">Get it on</div>
+            <div className="text-sm font-semibold text-gray-900">Google Play</div>
           </div>
         </div>
         <div className="absolute -top-2 -right-2 px-2 py-1 bg-orange-500 rounded-full text-xs font-semibold text-white shadow-lg">

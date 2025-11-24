@@ -34,7 +34,7 @@ const FeaturesGrid = () => {
         <h2 className="text-4xl sm:text-5xl font-bold mb-4">
           Why <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">Spontaneous</span>?
         </h2>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           A new way to connect through creativity and genuine moments
         </p>
       </motion.div>
@@ -55,12 +55,12 @@ const FeaturesGrid = () => {
               }}
               className="relative group"
             >
-              <div className="h-full p-8 rounded-2xl glass border border-white/10 hover:border-white/20 transition-all backdrop-blur-xl">
+              <div className="h-full p-8 rounded-2xl glass border border-gray-200/50 hover:border-orange-200 transition-all backdrop-blur-xl">
                 <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${feature.color} mb-6 shadow-lg`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-white">{feature.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{feature.description}</p>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
               
               {/* Hover glow effect */}

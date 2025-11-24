@@ -82,7 +82,7 @@ const PhoneMockup = ({ imageSrc }) => {
         </div>
 
         {/* Glow Effect */}
-        <div className="absolute inset-0 rounded-[3rem] bg-orange-500/20 blur-3xl -z-10 scale-110" />
+        <div className="absolute inset-0 rounded-[3rem] bg-orange-500/10 blur-3xl -z-10 scale-110" />
       </motion.div>
     </motion.div>
   )
