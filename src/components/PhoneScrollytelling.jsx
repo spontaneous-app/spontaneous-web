@@ -10,11 +10,18 @@ import { useMobile } from '../hooks/useMobile'
 
 const FEATURE_CARD_HEIGHT = 'min-h-[330px]'
 
+// Define constants outside component to keep it clean
+const MOBILE_PHONE_ENTER_START = 0
+const MOBILE_PHONE_ENTER_END = 0.15
+const MOBILE_IMAGE_SCROLL_START = 0.15
+const MOBILE_IMAGE_SCROLL_END = 0.85
+const MOBILE_PHONE_EXIT_START = 0.85
+const MOBILE_PHONE_EXIT_END = 1.0
+
 const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
   const internalRef = useRef(null)
   const isMobile = useMobile()
   
-  // Create a callback ref that sets both the forwarded ref and internal ref
   const setRef = (node) => {
     internalRef.current = node
     if (typeof ref === 'function') {
@@ -24,27 +31,73 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
     }
   }
   
-  // useScroll needs a ref - it will work even if the element isn't mounted yet
   const { scrollYProgress: phoneScroll } = useScroll({
     target: internalRef,
     offset: ["start start", "end end"]
   })
 
-  // Phone animations
+  // --- DESKTOP ANIMATIONS (Always defined) ---
   const phoneOpacity = useTransform(phoneScroll, PHONE_SCROLL.FADE_IN, [0, 1])
   const phoneScale = useTransform(phoneScroll, PHONE_SCROLL.FADE_IN, [0.9, 1])
-  // On mobile, don't move phone left - keep it centered
   const phoneX = useTransform(
     phoneScroll, 
     PHONE_SCROLL.MOVE_LEFT, 
+    // We can use the isMobile variable inside the ARRAY, just not to conditionally run the hook
     isMobile ? ["0%", "0%"] : ["0%", "-25vw"]
   )
 
-  // Text animations
   const t1Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_1, [20, 0])
   const t2Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_2, [20, 0])
   const glowOpacity = useTransform(phoneScroll, PHONE_SCROLL.GLOW, [0, 1])
   const t3Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_3, [20, 0])
+
+  // --- MOBILE ANIMATIONS (Must be defined at top level too!) ---
+  // Even if not used in desktop view, these hooks must run to preserve order
+  
+  const mobilePhoneScale = useTransform(phoneScroll, (latest) => {
+    if (latest < MOBILE_PHONE_ENTER_END) {
+      const enterProgress = latest / MOBILE_PHONE_ENTER_END
+      return 0.8 + (0.2 * enterProgress)
+    } else if (latest < MOBILE_PHONE_EXIT_START) {
+      return 1
+    } else {
+      const exitProgress = (latest - MOBILE_PHONE_EXIT_START) / (MOBILE_PHONE_EXIT_END - MOBILE_PHONE_EXIT_START)
+      return 1 - (0.1 * exitProgress)
+    }
+  })
+  
+  const finalPhoneOpacity = useTransform(phoneScroll, (latest) => {
+    if (latest < MOBILE_PHONE_ENTER_END) {
+      return latest / MOBILE_PHONE_ENTER_END
+    } else if (latest < MOBILE_PHONE_EXIT_START) {
+      return 1
+    } else {
+      const exitProgress = (latest - MOBILE_PHONE_EXIT_START) / (MOBILE_PHONE_EXIT_END - MOBILE_PHONE_EXIT_START)
+      return 1 - exitProgress
+    }
+  })
+  
+  const finalPhoneY = useTransform(phoneScroll, (latest) => {
+    if (latest < MOBILE_PHONE_ENTER_END) {
+      const enterProgress = latest / MOBILE_PHONE_ENTER_END
+      return 100 * (1 - enterProgress)
+    } else if (latest < MOBILE_PHONE_EXIT_START) {
+      return 0
+    } else {
+      const exitProgress = (latest - MOBILE_PHONE_EXIT_START) / (MOBILE_PHONE_EXIT_END - MOBILE_PHONE_EXIT_START)
+      return -50 * exitProgress
+    }
+  })
+  
+  const phoneTransform = useTransform(
+    finalPhoneY,
+    (y) => `translate(-50%, calc(-50% + ${y}px))`
+  )
+
+  // Exit animation
+  const exitOpacity = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0])
+  const exitScale = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0.95])
+  const exitY = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [0, -100])
 
   // Feature cards logic
   const featureThresholds = [0.6, 0.65, 0.70]
@@ -63,77 +116,9 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
     })
   })
 
-  // Exit animation - clears screen for ImageFan to enter
-  const exitOpacity = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0])
-  const exitScale = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0.95])
-  const exitY = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [0, -100])
-
-  // Mobile: Render with scroll hijacking
+  // --- RENDER LOGIC ---
+  
   if (isMobile) {
-    // Mobile scroll thresholds:
-    // 0-0.15: Phone enters and centers (completely hidden -> fully visible and centered)
-    // 0.15-0.85: Scroll hijacking for internal image scrolling
-    // 0.85-1.0: Phone exits, text appears
-    
-    const MOBILE_PHONE_ENTER_START = 0
-    const MOBILE_PHONE_ENTER_END = 0.15
-    const MOBILE_IMAGE_SCROLL_START = 0.15
-    const MOBILE_IMAGE_SCROLL_END = 0.85
-    const MOBILE_PHONE_EXIT_START = 0.85
-    const MOBILE_PHONE_EXIT_END = 1.0
-    
-    // Phone scale: starts small, scales to full during enter, stays full during scroll, then scales down on exit
-    const mobilePhoneScale = useTransform(phoneScroll, (latest) => {
-      if (latest < MOBILE_PHONE_ENTER_END) {
-        // During enter phase, scale from 0.8 to 1
-        const enterProgress = latest / MOBILE_PHONE_ENTER_END
-        return 0.8 + (0.2 * enterProgress)
-      } else if (latest < MOBILE_PHONE_EXIT_START) {
-        // During image scroll, stay at full scale
-        return 1
-      } else {
-        // During exit phase, scale down slightly
-        const exitProgress = (latest - MOBILE_PHONE_EXIT_START) / (MOBILE_PHONE_EXIT_END - MOBILE_PHONE_EXIT_START)
-        return 1 - (0.1 * exitProgress)
-      }
-    })
-    
-    // Combine enter and exit animations - phone is visible during image scroll (0.15-0.85)
-    const finalPhoneOpacity = useTransform(phoneScroll, (latest) => {
-      if (latest < MOBILE_PHONE_ENTER_END) {
-        // During enter phase, use enter opacity
-        return latest / MOBILE_PHONE_ENTER_END
-      } else if (latest < MOBILE_PHONE_EXIT_START) {
-        // During image scroll, fully visible
-        return 1
-      } else {
-        // During exit phase, fade out
-        const exitProgress = (latest - MOBILE_PHONE_EXIT_START) / (MOBILE_PHONE_EXIT_END - MOBILE_PHONE_EXIT_START)
-        return 1 - exitProgress
-      }
-    })
-    
-    const finalPhoneY = useTransform(phoneScroll, (latest) => {
-      if (latest < MOBILE_PHONE_ENTER_END) {
-        // During enter phase, move from below to center
-        const enterProgress = latest / MOBILE_PHONE_ENTER_END
-        return 100 * (1 - enterProgress)
-      } else if (latest < MOBILE_PHONE_EXIT_START) {
-        // During image scroll, stay centered
-        return 0
-      } else {
-        // During exit phase, move up
-        const exitProgress = (latest - MOBILE_PHONE_EXIT_START) / (MOBILE_PHONE_EXIT_END - MOBILE_PHONE_EXIT_START)
-        return -50 * exitProgress
-      }
-    })
-    
-    // Combine CSS centering with motion Y transform
-    const phoneTransform = useTransform(
-      finalPhoneY,
-      (y) => `translate(-50%, calc(-50% + ${y}px))`
-    )
-    
     return (
       <>
         {/* PHONE SCROLLYTELLING SECTION */}
@@ -144,7 +129,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
         >
           <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
             <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 px-4 w-full relative h-full">
-              {/* PHONE - Enters, stays centered for image scroll, then exits */}
               <motion.div
                 style={{ 
                   opacity: finalPhoneOpacity,
@@ -167,10 +151,9 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
           </div>
         </section>
 
-        {/* FEATURE CARDS SECTION - Appears below phone section */}
+        {/* FEATURE CARDS SECTION */}
         <section className="relative w-full py-16 px-4" style={{ backgroundColor: 'inherit' }}>
           <div className="max-w-2xl mx-auto flex flex-col items-center gap-8">
-            {/* HEADERS */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -204,7 +187,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
               </div>
             </motion.div>
 
-            {/* DESCRIPTION */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 0.8, y: 0 }}
@@ -216,7 +198,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
               Reveal one of three daily photo prompts. No algorithms, no influencers—just you and your friends capturing life as it happens.
             </motion.p>
 
-            {/* FEATURES */}
             <div className="mt-8 flex flex-col gap-4 w-full">
               {featureCards.map((feature, index) => (
                 <motion.div
@@ -245,20 +226,18 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
     )
   }
 
-  // Desktop: Original sticky scrollytelling behavior
+  // Desktop Return
   return (
     <section
       ref={setRef}
       className="relative h-[400vh]"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">
-        {/* WRAP EVERYTHING IN THIS EXIT CONTAINER */}
         <motion.div
           style={{ opacity: exitOpacity, scale: exitScale, y: exitY }}
           className="relative w-full max-w-7xl mx-auto h-full flex items-center justify-center"
         >
 
-          {/* PHONE */}
           <motion.div
             style={{ opacity: phoneOpacity, x: phoneX, scale: phoneScale }}
             className="relative z-20 flex-shrink-0"
@@ -273,11 +252,9 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
             </div>
           </motion.div>
 
-          {/* RIGHT TEXT BLOCK */}
           <div className="absolute w-full md:w-1/2 right-0 top-[18vh] px-8 md:pl-16 z-10 pointer-events-none">
             <div className="max-w-lg ml-auto md:ml-0 text-center md:text-left md:p-0 flex flex-col gap-6">
 
-              {/* HEADERS */}
               <motion.div style={{ y: t1Y }} className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                 <LetterReveal
                   text="Daily Prompts."
@@ -307,7 +284,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
                 </div>
               </motion.div>
 
-              {/* DESCRIPTION */}
               <motion.div style={{ y: t3Y }} className="text-lg sm:text-xl opacity-80 leading-relaxed">
                 <LetterReveal
                   text="Reveal one of three daily photo prompts. No algorithms, no influencers—just you and your friends capturing life as it happens."
@@ -318,7 +294,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
                 />
               </motion.div>
 
-              {/* FEATURES */}
               <div className="mt-10 flex flex-col md:flex-row gap-4 md:gap-6 w-full">
                 {featureCards.map((feature, index) => {
                   const yTransform = featureYTransforms[index] || featureYTransforms[0]
