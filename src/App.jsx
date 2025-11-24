@@ -14,42 +14,50 @@ function App() {
     offset: ["start start", "end end"]
   })
 
-  // Background Transition: Cream -> Dark Slate (at 15%) -> Cream (at 80%)
-  // This creates a "Dark Mode" section for the phone reveal
+  // Background Transition
   const backgroundColor = useTransform(
     globalScroll,
     [0, 0.10, 0.7, 0.80], 
     ["#FFEFE0", "#182140", "#0f172a", "#FFEFE0"]
   )
   
-  // Text Color Transition: Black -> White -> Black
+  // Text Color Transition
   const textColor = useTransform(
     globalScroll,
     [0, 0.15, 0.7, 0.75], 
     ["#0f172a", "#f8fafc", "#f8fafc", "#0f172a"]
   )
 
-  // --- PHONE SECTION LOGIC ---
+  // --- PHONE SECTION SCROLL LOGIC ---
   const phoneSectionRef = useRef(null)
   const { scrollYProgress: phoneScroll } = useScroll({
     target: phoneSectionRef,
     offset: ["start start", "end end"]
   })
 
-  // 1. Entrance: Faster fade in (0-10%)
+  // 1. Phone Entrance (0% - 10%)
   const phoneOpacity = useTransform(phoneScroll, [0, 0.1], [0, 1])
   const phoneScale = useTransform(phoneScroll, [0, 0.1], [0.9, 1])
   
-  // 2. Move Left: Starts immediately
-  const phoneX = useTransform(phoneScroll, [0.1, 0.35], ["0%", "-25vw"]) 
+  // 2. Phone Move Left (10% - 30%)
+  // Moves left quickly to make room for text
+  const phoneX = useTransform(phoneScroll, [0.1, 0.3], ["0%", "-25vw"]) 
 
-  // 3. Text Entrance (Apple Style Reveal)
-  // We split these to stagger them slightly
-  const textOpacity = useTransform(phoneScroll, [0.15, 0.35], [0, 1])
-  const textY = useTransform(phoneScroll, [0.15, 0.35], [20, 0])
+  // 3. TEXT REVEAL LOGIC (Apple Style - Staggered)
+  
+  // Line 1: Headline (Appears 30% - 40%)
+  const t1Opacity = useTransform(phoneScroll, [0.3, 0.4], [0, 1])
+  const t1Y = useTransform(phoneScroll, [0.3, 0.4], [20, 0])
+
+  // Line 2: The Punchline (Appears 40% - 50%)
+  const t2Opacity = useTransform(phoneScroll, [0.4, 0.5], [0, 1])
+  const t2Y = useTransform(phoneScroll, [0.4, 0.5], [20, 0])
+
+  // Line 3: Description (Appears 50% - 60%)
+  const t3Opacity = useTransform(phoneScroll, [0.5, 0.6], [0, 1])
+  const t3Y = useTransform(phoneScroll, [0.5, 0.6], [20, 0])
 
   return (
-    // Apply the dynamic background color here
     <motion.div 
       ref={containerRef}
       style={{ backgroundColor }}
@@ -57,12 +65,12 @@ function App() {
     >
       <main className="pb-32">
         
-        {/* HERO (Cream Background) */}
+        {/* HERO */}
         <section className="h-[80vh] flex flex-col items-center justify-center relative">
           <Hero />
         </section>
 
-        {/* PHONE SCROLLYTELLING (Transitions to Dark) */}
+        {/* PHONE SCROLLYTELLING */}
         <section 
           ref={phoneSectionRef}
           className="relative h-[400vh]"
@@ -80,30 +88,45 @@ function App() {
                 </div>
               </motion.div>
 
-              {/* RIGHT TEXT BLOCK (Dynamic Color) */}
-              <motion.div
-                style={{ opacity: textOpacity, y: textY, color: textColor }}
-                className="absolute w-full md:w-1/2 right-0 top-1/2 -translate-y-1/2 px-8 md:pl-16 z-10 pointer-events-none"
+              {/* RIGHT TEXT BLOCK */}
+              {/* ALIGNMENT FIX: Changed top-1/2 to top-[25vh] to align with top of phone */}
+              <div
+                className="absolute w-full md:w-1/2 right-0 top-[25vh] px-8 md:pl-16 z-10 pointer-events-none"
               >
-                <div className="max-w-lg ml-auto md:ml-0 text-center md:text-left md:p-0">
+                <div className="max-w-lg ml-auto md:ml-0 text-center md:text-left md:p-0 flex flex-col gap-6">
                   
-                  {/* Staggered Reveal Text */}
-                  <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-                    Reveal daily prompts. <br />
-                    <span className="text-[#F18E48]">Spark fun.</span>
-                  </h2>
-                  <p className="text-lg sm:text-2xl opacity-80 leading-relaxed">
-                    Post your prompt to share and compare with friends. Compete to post the best photos with leaderboards coming soon.
-                  </p>
+                  {/* Line 1: The Header */}
+                  <motion.h2 
+                    style={{ opacity: t1Opacity, y: t1Y, color: textColor }}
+                    className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight"
+                  >
+                    Daily Prompts.
+                  </motion.h2>
+
+                  {/* Line 2: The Accent/Punchline */}
+                  <motion.h3 
+                    style={{ opacity: t2Opacity, y: t2Y }}
+                    className="text-2xl sm:text-4xl font-semibold text-[#F18E48]"
+                  >
+                    Unfiltered Connections.
+                  </motion.h3>
+                  
+                  {/* Line 3: The Description */}
+                  <motion.p 
+                    style={{ opacity: t3Opacity, y: t3Y, color: textColor }}
+                    className="text-lg sm:text-xl opacity-80 leading-relaxed"
+                  >
+                    Reveal one of three daily photo prompts. No algorithms, no influencers—just you and your friends capturing life as it happens.
+                  </motion.p>
                   
                 </div>
-              </motion.div>
+              </div>
 
             </div>
           </div>
         </section>
 
-        {/* IMAGE FAN (Still Dark Background) */}
+        {/* IMAGE FAN */}
         <section className="py-20 sm:py-32 flex flex-col items-center relative z-30">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -126,7 +149,7 @@ function App() {
           </motion.div>
         </section>
 
-        {/* FEATURES (Transitions back to Cream) */}
+        {/* FEATURES */}
         <section className="py-20 container mx-auto px-4">
            <FeaturesGrid />
         </section>
