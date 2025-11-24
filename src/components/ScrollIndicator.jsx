@@ -12,7 +12,7 @@ const ScrollIndicator = ({ className = '', color, style }) => {
       animate={{ opacity: 1 }}
       transition={{ delay: 1.2, duration: 0.8 }}
     >
-      <span className="mb-2 text-[11px]">Scroll</span>
+      <span className="mb-2 text-[11px]">Scroll For More</span>
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}

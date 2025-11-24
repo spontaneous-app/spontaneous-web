@@ -14,14 +14,14 @@ export const useScrollAnimations = () => {
   const backgroundColor = useTransform(
     globalScroll,
     [0, 0.10, 0.7, 0.80], 
-    ["#FFEFE0", "#182140", "#0f172a", "#FFEFE0"]
+    ["#FFEFE0", "#0f172a", "#0f172a", "#0f172a"]
   )
   
   // Text Color Transition
   const textColor = useTransform(
     globalScroll,
     [0, 0.15, 0.66, 0.72], 
-    ["#0f172a", "#f8fafc", "#f8fafc", "#0f172a"]
+    ["#0f172a", "#f8fafc", "#f8fafc", "#f8fafc"]
   )
 
   return {
