@@ -22,14 +22,13 @@ const PhoneMockup = ({ imageSrc }) => {
         <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-gray-800 to-gray-900 p-2 shadow-2xl border-4 border-gray-700">
           {/* Screen */}
           <div className="w-full h-full rounded-[2.5rem] bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 overflow-hidden relative">
-            {/* Status Bar */}
-            <div className="absolute top-0 left-0 right-0 h-12 z-20 flex items-center justify-between px-6 text-white text-xs font-medium">
-              <span className="drop-shadow-md">9:41</span>
-              <div className="flex items-center gap-1">
-                <div className="w-4 h-2 border border-white/50 rounded-sm">
-                  <div className="w-3/4 h-full bg-white/80 rounded-sm" />
-                </div>
-                <div className="w-1 h-1 bg-white/80 rounded-full" />
+            {/* Dynamic Island */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30">
+              <div className="w-[80px] h-[18px] bg-black rounded-full flex items-center justify-center gap-2 px-4 shadow-lg">
+                {/* Camera */}
+                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                {/* Speaker */}
+                <div className="w-8 h-1 bg-gray-700 rounded-full" />
               </div>
             </div>
 
@@ -38,7 +37,7 @@ const PhoneMockup = ({ imageSrc }) => {
               <img
                 src={imageSrc}
                 alt="Spontaneous app screenshot"
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-200"
                 style={{ objectFit: 'cover' }}
               />
             ) : (

@@ -30,7 +30,7 @@ function App() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex justify-center lg:justify-end"
           >
-            <PhoneMockup imageSrc="/assets/iphone_screenshot.png" />
+            <PhoneMockup imageSrc="/iphone_screenshot.png" />
           </motion.div>
         </div>
 
@@ -50,11 +50,11 @@ function App() {
 
           <ImageFan
             images={[
-              '/assets/sc1.jpg',
-              '/assets/sc6.jpg',
-              '/assets/sc2.jpg',
-              '/assets/sc4.jpg',
-              '/assets/sc5.jpg',
+              '/sc1.jpg',
+              '/sc6.jpg',
+              '/sc2.jpg',
+              '/sc4.jpg',
+              '/sc5.jpg',
             ]}
           />
         </section>
