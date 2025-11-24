@@ -36,10 +36,17 @@ const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 
   const gradientRotation = useMotionValue(0)
   
   // Create animated gradient backgrounds with higher opacity for brightness
+  // Normalize rotation to 0-360 range for smooth calculations
+  const normalizedRotation = useTransform(gradientRotation, (r) => {
+    // Normalize to 0-360 range smoothly
+    const normalized = ((r % 360) + 360) % 360
+    return normalized
+  })
+  
   const gradientBg1 = useTransform(
-    gradientRotation,
+    normalizedRotation,
     (r) => {
-      const angle = (r % 360) * Math.PI / 180
+      const angle = r * Math.PI / 180
       const x = 50 + 20 * Math.cos(angle)
       const y = 50 + 20 * Math.sin(angle)
       return `radial-gradient(circle at ${x}% ${y}%, rgba(241, 142, 72, 0.9) 0%, rgba(255, 77, 77, 0.7) 25%, rgba(192, 38, 211, 0.5) 50%, transparent 75%)`
@@ -47,9 +54,9 @@ const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 
   )
   
   const gradientBg2 = useTransform(
-    gradientRotation,
+    normalizedRotation,
     (r) => {
-      const angle = ((r + 120) % 360) * Math.PI / 180
+      const angle = (r + 120) * Math.PI / 180
       const x = 50 + 20 * Math.cos(angle)
       const y = 50 + 20 * Math.sin(angle)
       return `radial-gradient(circle at ${x}% ${y}%, rgba(192, 38, 211, 0.8) 0%, rgba(255, 77, 77, 0.6) 30%, transparent 60%)`
@@ -57,12 +64,14 @@ const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 
   )
   
   useEffect(() => {
+    // Use continuous animation that never resets - let it grow infinitely
     let animationFrame
-    let startTime = Date.now()
+    let startTime = performance.now()
     
     const animate = () => {
-      const elapsed = (Date.now() - startTime) / 1000
-      const rotation = (elapsed * 36) % 360 // 36 degrees per second = 10 seconds per full rotation
+      const elapsed = (performance.now() - startTime) / 1000
+      // Continuous rotation - grows infinitely, no reset
+      const rotation = elapsed * 36 // 36 degrees per second
       gradientRotation.set(rotation)
       animationFrame = requestAnimationFrame(animate)
     }
@@ -96,7 +105,7 @@ const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 
           style={{
             background: gradientBg2,
             scale: glowScale2,
-            rotate: useTransform(gradientRotation, (r) => r * 0.5),
+            rotate: useTransform(normalizedRotation, (r) => `${r * 0.5}deg`),
           }}
         />
       </motion.div>
