@@ -128,116 +128,120 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
       }
     })
     
+    // Combine CSS centering with motion Y transform
+    const phoneTransform = useTransform(
+      finalPhoneY,
+      (y) => `translate(-50%, calc(-50% + ${y}px))`
+    )
+    
     return (
-      <section
-        ref={setRef}
-        className="relative h-[400vh] w-full"
-        style={{ backgroundColor: 'inherit' }}
-      >
-        <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
-          <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 px-4 w-full">
-            {/* PHONE - Enters, stays centered for image scroll, then exits */}
-            <motion.div
-              style={{ 
-                opacity: finalPhoneOpacity,
-                scale: mobilePhoneScale,
-                y: finalPhoneY
-              }}
-              className="relative z-20 flex-shrink-0"
-            >
-              <div className="scale-100 shadow-2xl shadow-orange-500/20 rounded-[3rem]">
-                <PhoneMockup
-                  imageSrc="/long_screenshot.png"
-                  scrollProgress={phoneScroll}
-                  scrollStart={MOBILE_IMAGE_SCROLL_START}
-                  scrollEnd={MOBILE_IMAGE_SCROLL_END}
-                />
-              </div>
-            </motion.div>
-
-            {/* TEXT BLOCK - Only appears after phone exits (after image scroll) */}
-            <motion.div 
-              className="w-full text-center flex flex-col gap-6 absolute top-[60vh]"
-              style={{
-                opacity: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START, MOBILE_PHONE_EXIT_END], [0, 1])
-              }}
-            >
-
-              {/* HEADERS */}
-              <motion.h2
-                style={{ 
-                  opacity: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START, MOBILE_PHONE_EXIT_START + 0.05], [0, 1]),
-                  y: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START, MOBILE_PHONE_EXIT_START + 0.05], [20, 0]),
-                  color: textColor || 'white'
-                }}
-                className="text-4xl sm:text-5xl font-bold leading-tight"
-              >
-                Daily Prompts.
-              </motion.h2>
-
+      <>
+        {/* PHONE SCROLLYTELLING SECTION */}
+        <section
+          ref={setRef}
+          className="relative h-[300vh] w-full"
+          style={{ backgroundColor: 'inherit' }}
+        >
+          <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+            <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 px-4 w-full relative h-full">
+              {/* PHONE - Enters, stays centered for image scroll, then exits */}
               <motion.div
                 style={{ 
-                  opacity: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START + 0.05, MOBILE_PHONE_EXIT_START + 0.1], [0, 1]),
-                  y: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START + 0.05, MOBILE_PHONE_EXIT_START + 0.1], [20, 0])
+                  opacity: finalPhoneOpacity,
+                  scale: mobilePhoneScale,
+                  transform: phoneTransform
                 }}
-                className="relative text-2xl sm:text-3xl font-semibold inline-block"
+                className="absolute top-1/2 left-1/2 z-20 flex-shrink-0"
+                initial={false}
               >
-                <motion.div
-                  className="absolute -inset-12 -z-10 pointer-events-none"
-                  style={{
-                    opacity: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START + 0.05, MOBILE_PHONE_EXIT_START + 0.1], [0, 1]),
-                    background: GRADIENTS.glow,
-                    filter: 'blur(80px)',
-                  }}
-                />
-                <div className="relative z-0 bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 bg-clip-text text-transparent">
-                  Unfiltered Connections.
+                <div className="scale-100 shadow-2xl shadow-orange-500/20 rounded-[3rem]">
+                  <PhoneMockup
+                    imageSrc="/long_screenshot.png"
+                    scrollProgress={phoneScroll}
+                    scrollStart={MOBILE_IMAGE_SCROLL_START}
+                    scrollEnd={MOBILE_IMAGE_SCROLL_END}
+                  />
                 </div>
               </motion.div>
+            </div>
+          </div>
+        </section>
 
-              {/* DESCRIPTION */}
-              <motion.p
-                style={{ 
-                  opacity: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START + 0.1, MOBILE_PHONE_EXIT_START + 0.15], [0, 0.8]),
-                  y: useTransform(phoneScroll, [MOBILE_PHONE_EXIT_START + 0.1, MOBILE_PHONE_EXIT_START + 0.15], [20, 0]),
-                  color: textColor || 'white'
+        {/* FEATURE CARDS SECTION - Appears below phone section */}
+        <section className="relative w-full py-16 px-4" style={{ backgroundColor: 'inherit' }}>
+          <div className="max-w-2xl mx-auto flex flex-col items-center gap-8">
+            {/* HEADERS */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl sm:text-5xl font-bold leading-tight text-center"
+              style={{ color: textColor || 'white' }}
+            >
+              Daily Prompts.
+            </motion.h2>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="relative text-2xl sm:text-3xl font-semibold inline-block"
+            >
+              <motion.div
+                className="absolute -inset-12 -z-10 pointer-events-none"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                style={{
+                  background: GRADIENTS.glow,
+                  filter: 'blur(80px)',
                 }}
-                className="text-lg sm:text-xl leading-relaxed"
-              >
-                Reveal one of three daily photo prompts. No algorithms, no influencers—just you and your friends capturing life as it happens.
-              </motion.p>
-
-              {/* FEATURES */}
-              <div className="mt-10 flex flex-col gap-4 w-full">
-                {featureCards.map((feature, index) => {
-                  const featureStart = MOBILE_PHONE_EXIT_START + 0.15 + index * 0.03
-                  const featureEnd = featureStart + 0.03
-                  return (
-                    <motion.div
-                      key={feature.title}
-                      style={{ 
-                        opacity: useTransform(phoneScroll, [featureStart, featureEnd], [0, 1]),
-                        y: useTransform(phoneScroll, [featureStart, featureEnd], [20, 0])
-                      }}
-                      className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg"
-                    >
-                      <h4 className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text`}>
-                        {feature.title}
-                      </h4>
-                      <p 
-                        className="text-sm leading-relaxed text-white" 
-                        style={{ color: textColor || 'white', opacity: 0.8 }}
-                      >
-                        {feature.description}
-                      </p>
-                    </motion.div>
-                  )
-                })}
+              />
+              <div className="relative z-0 bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 bg-clip-text text-transparent">
+                Unfiltered Connections.
               </div>
             </motion.div>
+
+            {/* DESCRIPTION */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 0.8, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg sm:text-xl leading-relaxed text-center max-w-2xl"
+              style={{ color: textColor || 'white' }}
+            >
+              Reveal one of three daily photo prompts. No algorithms, no influencers—just you and your friends capturing life as it happens.
+            </motion.p>
+
+            {/* FEATURES */}
+            <div className="mt-8 flex flex-col gap-4 w-full">
+              {featureCards.map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                  className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg"
+                >
+                  <h4 className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text`}>
+                    {feature.title}
+                  </h4>
+                  <p 
+                    className="text-sm leading-relaxed text-white" 
+                    style={{ color: textColor || 'white', opacity: 0.8 }}
+                  >
+                    {feature.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     )
   }
 
