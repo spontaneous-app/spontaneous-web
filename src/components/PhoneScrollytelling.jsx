@@ -61,7 +61,7 @@ const PhoneScrollytelling = ({ textColor }) => {
     return (
       <section
         ref={phoneSectionRef}
-        className="relative w-full py-20 px-4"
+        className="relative w-full py-20 px-4 mt-8"
       >
         <div className="max-w-2xl mx-auto flex flex-col items-center gap-12">
           {/* PHONE */}

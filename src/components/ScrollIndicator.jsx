@@ -6,7 +6,7 @@ const ScrollIndicator = ({ className = '', color, style }) => {
   
   return (
     <motion.div
-      className={`flex flex-col items-center text-xs uppercase tracking-[0.3em] ${className}`}
+      className={`flex flex-col items-center text-xs uppercase tracking-[0.3em] z-50 ${className}`}
       style={{ color: resolvedColor, ...style }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -16,7 +16,7 @@ const ScrollIndicator = ({ className = '', color, style }) => {
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-        className="rounded-full border p-2 backdrop-blur-sm bg-white/10"
+        className="rounded-full border w-8 h-8 flex items-center justify-center backdrop-blur-sm bg-white/10"
         style={{ borderColor: resolvedColor }}
       >
         <ChevronDown className="w-4 h-4" style={{ color: resolvedColor }} />
