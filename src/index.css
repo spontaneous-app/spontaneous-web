@@ -4,8 +4,9 @@
 
 @layer base {
   body {
-    /* Light warm background that complements orange */
-    @apply bg-gradient-to-br from-stone-50 via-orange-50/30 to-amber-50/20 text-gray-900 antialiased min-h-screen relative selection:bg-orange-500/20;
+    @apply text-gray-900 antialiased min-h-screen relative selection:bg-orange-500/20;
+    background-color: #FFFBF7;
+    overflow-x: hidden; 
   }
 }
 
@@ -21,6 +22,11 @@
 
   /* This adds the modern "spotlight" effect behind the Hero text */
   .bg-spotlight {
-    background: radial-gradient(circle at 50% 0%, rgba(241, 142, 72, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle at 50% 0%, rgba(241, 142, 72, 0.05) 0%, transparent 70%);
+  }
+  
+  /* Hero glow effect */
+  .hero-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(241, 142, 72, 0.05) 0%, transparent 60%);
   }
 }

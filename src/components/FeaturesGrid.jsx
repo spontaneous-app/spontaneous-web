@@ -1,34 +1,66 @@
 import { motion } from 'framer-motion'
-import { Lightbulb, Award, Sparkles } from 'lucide-react'
+import { Lightbulb, Share2, Award } from 'lucide-react'
+import { useRef } from 'react'
+import { useInView } from 'framer-motion'
 
 const features = [
   {
     icon: Lightbulb,
-    title: 'Unique Daily Prompts',
-    description: 'See how your friends interpret the same prompt differently. Every perspective is unique, every response is creative.',
+    title: 'Daily Prompts',
+    description: 'Pick one of three daily prompts! Whimsical prompts to bring fun to your day.',
     color: 'from-orange-500 to-amber-500',
   },
   {
-    icon: Award,
-    title: 'Custom Badges',
-    description: 'Award badges to your friends\' posts. Celebrate creativity, humor, and those moments that make you smile.',
+    icon: Share2,
+    title: 'Share & Compare',
+    description: 'Post and share! See how friends interpreted the same prompt or a different one.',
     color: 'from-orange-500 to-red-500',
   },
   {
-    icon: Sparkles,
-    title: 'Algorithm-Free',
-    description: 'Zero clutter. No AI content. Just your friends and the prompts that spark real conversations.',
+    icon: Award,
+    title: 'Streaks & Awards',
+    description: 'Maintain a streak! Compete to have the most awards on the monthly leaderboard (Coming Soon).',
     color: 'from-orange-400 to-orange-600',
   },
 ]
 
 const FeaturesGrid = () => {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  }
+
   return (
-    <div className="space-y-12">
+    <motion.div 
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+      className="space-y-12"
+    >
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        variants={itemVariants}
         className="text-center"
       >
         <h2 className="text-4xl sm:text-5xl font-bold mb-4">
@@ -45,13 +77,11 @@ const FeaturesGrid = () => {
           return (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 + index * 0.2 }}
+              variants={itemVariants}
               whileHover={{ 
                 y: -8, 
                 scale: 1.02,
-                transition: { duration: 0.2, delay: 0 } // This forces hover to be instant
+                transition: { duration: 0.2 }
               }}
               className="relative group"
             >
@@ -69,9 +99,8 @@ const FeaturesGrid = () => {
           )
         })}
       </div>
-    </div>
+    </motion.div>
   )
 }
 
 export default FeaturesGrid
-
