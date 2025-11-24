@@ -50,7 +50,7 @@ const PhoneScrollytelling = ({ textColor }) => {
           {/* RIGHT TEXT BLOCK */}
           {/* ALIGNMENT FIX: Changed top-1/2 to top-[25vh] to align with top of phone */}
           <div
-            className="absolute w-full md:w-1/2 right-0 top-[25vh] px-8 md:pl-16 z-10 pointer-events-none"
+            className="absolute w-full md:w-1/2 right-0 top-[14vh] px-8 md:pl-16 z-10 pointer-events-none"
           >
             <div className="max-w-lg ml-auto md:ml-0 text-center md:text-left md:p-0 flex flex-col gap-6">
               
@@ -71,14 +71,38 @@ const PhoneScrollytelling = ({ textColor }) => {
               {/* Line 2: The Accent/Punchline */}
               <motion.div
                 style={{ y: t2Y }}
-                className="text-2xl sm:text-4xl font-semibold text-[#F18E48]"
+                className="relative text-2xl sm:text-4xl font-semibold inline-block"
               >
-                <LetterReveal
-                  text="Unfiltered Connections."
-                  scrollProgress={phoneScroll}
-                  startProgress={0.4}
-                  endProgress={0.5}
+                {/* Backlight/Glow Effect - Blurred blob behind text */}
+                <motion.div 
+                  className="absolute -inset-12 -z-10 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(241, 142, 72, 0.5) 0%, rgba(255, 77, 77, 0.5) 50%, rgba(192, 38, 211, 0.5) 100%)',
+                    filter: 'blur(80px)',
+                    width: '120%',
+                    height: '200%',
+                    top: '-50%',
+                    left: '-10%',
+                  }}
                 />
+                
+                {/* Gradient Text */}
+                <div
+                  className="relative z-0"
+                  style={{
+                    background: 'linear-gradient(90deg, #F18E48 0%, #ff4d4d 50%, #c026d3 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  <LetterReveal
+                    text="Unfiltered Connections."
+                    scrollProgress={phoneScroll}
+                    startProgress={0.4}
+                    endProgress={0.5}
+                  />
+                </div>
               </motion.div>
               
               {/* Line 3: The Description */}
