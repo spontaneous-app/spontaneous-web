@@ -7,46 +7,45 @@ const AppStoreButtons = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.5 }}
-      className="flex flex-wrap gap-4"
+      className="flex flex-wrap justify-center gap-6"
     >
-      {/* Apple App Store Button */}
-      <motion.div
-        whileHover={{ scale: 1.05 }}
+      {/* Apple App Store - Solid Black, White Text */}
+      <motion.button
+        whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
-        className="relative group"
+        className="relative group flex items-center gap-3 px-6 py-3 rounded-xl bg-slate-900 text-white border border-slate-800 shadow-xl hover:shadow-2xl transition-all"
       >
-        <div className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900 border border-gray-800 opacity-50 cursor-not-allowed">
-          <Apple className="w-6 h-6 text-white" />
-          <div className="text-left">
-            <div className="text-xs text-gray-300">Download on the</div>
-            <div className="text-sm font-semibold text-white">App Store</div>
-          </div>
+        <Apple className="w-8 h-8 fill-current" />
+        <div className="text-left">
+          <div className="text-[10px] uppercase tracking-wider opacity-70">Download on the</div>
+          <div className="text-lg font-bold leading-none">App Store</div>
         </div>
-        <div className="absolute -top-2 -right-2 px-2 py-1 bg-orange-500 rounded-full text-xs font-semibold text-white shadow-lg">
-          Soon
+        
+        {/* 'Soon' Badge */}
+        <div className="absolute -top-3 -right-3 px-2 py-1 bg-orange-500 rounded-full text-[10px] font-bold text-white shadow-sm border-2 border-[#FFFBF7]">
+          SOON
         </div>
-      </motion.div>
+      </motion.button>
 
-      {/* Google Play Button */}
-      <motion.div
-        whileHover={{ scale: 1.05 }}
+      {/* Google Play - Solid Black, White Text */}
+      <motion.button
+        whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
-        className="relative group"
+        className="relative group flex items-center gap-3 px-6 py-3 rounded-xl bg-slate-900 text-white border border-slate-800 shadow-xl hover:shadow-2xl transition-all"
       >
-        <div className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900 border border-gray-800 opacity-50 cursor-not-allowed">
-          <Smartphone className="w-6 h-6 text-white" />
-          <div className="text-left">
-            <div className="text-xs text-gray-300">Get it on</div>
-            <div className="text-sm font-semibold text-white">Google Play</div>
-          </div>
+        <Smartphone className="w-8 h-8 fill-current" />
+        <div className="text-left">
+          <div className="text-[10px] uppercase tracking-wider opacity-70">Get it on</div>
+          <div className="text-lg font-bold leading-none">Google Play</div>
         </div>
-        <div className="absolute -top-2 -right-2 px-2 py-1 bg-orange-500 rounded-full text-xs font-semibold text-white shadow-lg">
-          Soon
+        
+         {/* 'Soon' Badge */}
+        <div className="absolute -top-3 -right-3 px-2 py-1 bg-orange-500 rounded-full text-[10px] font-bold text-white shadow-sm border-2 border-[#FFFBF7]">
+          SOON
         </div>
-      </motion.div>
+      </motion.button>
     </motion.div>
   )
 }
 
 export default AppStoreButtons
-
