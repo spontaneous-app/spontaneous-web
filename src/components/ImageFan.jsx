@@ -74,7 +74,7 @@ const ImageFan = ({
       className="relative h-[280vh] w-full flex items-center justify-center z-30"
     >
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-visible">
-        <div className="absolute top-12 left-0 w-full px-4 sm:px-8">
+        <div className="absolute top-6 sm:top-8 left-0 w-full px-4 sm:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <motion.h3 className="text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-white leading-tight">
               {hasHighlight ? (
@@ -83,17 +83,17 @@ const ImageFan = ({
                     <LetterReveal
                       text={prefixPart.trim()}
                       scrollProgress={localScroll}
-                      startProgress={0.02}
-                      endProgress={0.18}
+                      startProgress={0}
+                      endProgress={0.14}
                     />
                   )}
                   <LetterReveal
                     text={highlightWord}
                     scrollProgress={localScroll}
-                    startProgress={0.1}
-                    endProgress={0.28}
-                    letterClassName="text-transparent bg-clip-text"
-                    letterStyle={{
+                    startProgress={0.06}
+                    endProgress={0.22}
+                    className="text-transparent bg-clip-text"
+                    style={{
                       backgroundImage: 'linear-gradient(90deg, #F18E48 0%, #ff4d4d 50%, #c026d3 100%)',
                     }}
                   />
@@ -101,8 +101,8 @@ const ImageFan = ({
                     <LetterReveal
                       text={suffixPart.trim()}
                       scrollProgress={localScroll}
-                      startProgress={0.18}
-                      endProgress={0.32}
+                      startProgress={0.12}
+                      endProgress={0.26}
                     />
                   )}
                 </div>
@@ -110,8 +110,8 @@ const ImageFan = ({
                 <LetterReveal
                   text={title}
                   scrollProgress={localScroll}
-                  startProgress={0.05}
-                  endProgress={0.25}
+                  startProgress={0}
+                  endProgress={0.18}
                 />
               )}
             </motion.h3>

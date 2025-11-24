@@ -30,10 +30,12 @@ function App() {
         <PhoneScrollytelling textColor={textColor} />
 
         {/* IMAGE FAN */}
-        <ImageFan
-          images={['/sc1.jpg', '/sc6.jpg', '/sc2.jpg', '/sc4.jpg', '/sc5.jpg']}
-          title="Captured on Spontaneous"
-        />
+        <div className="relative z-30 -mt-[20vh]">
+          <ImageFan
+            images={['/sc1.jpg', '/sc6.jpg', '/sc2.jpg', '/sc4.jpg', '/sc5.jpg']}
+            title="Captured on Spontaneous"
+          />
+        </div>
 
       </main>
     </motion.div>
