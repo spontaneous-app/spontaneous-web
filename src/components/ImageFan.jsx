@@ -1,39 +1,24 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence, useInView, useScroll, useMotionValueEvent } from 'framer-motion'
 import LetterReveal from './LetterReveal'
-
-// --- TUNING VARIABLES ---
-const SPACING = 170          
-const MOBILE_SPACING = 50   
-const ARCH_STRENGTH = 10    
-const ROTATION_STRENGTH = 8 
-// -----------------------------------------------
-
-const TEXT_COMPLETE_THRESHOLD = 0.25
-const REVEAL_START = 0.35
+import { useMobile } from '../hooks/useMobile'
+import { IMAGE_FAN_SCROLL, IMAGE_FAN } from '../constants/animations'
+import { GRADIENTS } from '../constants/colors'
 
 const ImageFan = ({
   images = [],
   title = 'Captured on Spontaneous'
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null)
-  const [isMobile, setIsMobile] = useState(false)
+  const isMobile = useMobile()
   const [textComplete, setTextComplete] = useState(false)
-  const [showImages, setShowImages] = useState(false) // Changed from 'revealedImages' count to a boolean
+  const [showImages, setShowImages] = useState(false)
   const containerRef = useRef(null)
-  // Increased bottom margin so it stays visible longer during exit
   const isInView = useInView(containerRef, { margin: '-10% 0px -10% 0px' })
   const { scrollYProgress: localScroll } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   })
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   const allImages = images.length > 0 ? images : Array(5).fill('/api/placeholder/400/800')
   const centerOfArray = Math.floor(allImages.length / 2)
@@ -46,11 +31,9 @@ const ImageFan = ({
   const hasHighlight = title.includes(highlightWord)
   const [prefixPart, suffixPart] = hasHighlight ? title.split(highlightWord) : [title, '']
 
-  // 1. UPDATED SCROLL LOGIC: Trigger all at once
   useMotionValueEvent(localScroll, 'change', (latest) => {
-    setTextComplete(latest >= TEXT_COMPLETE_THRESHOLD)
-    // As soon as we hit the start line, show ALL images
-    setShowImages(latest >= REVEAL_START)
+    setTextComplete(latest >= IMAGE_FAN_SCROLL.TEXT_COMPLETE)
+    setShowImages(latest >= IMAGE_FAN_SCROLL.REVEAL_START)
   })
 
   return (
@@ -68,26 +51,26 @@ const ImageFan = ({
                     <LetterReveal
                       text={prefixPart.trim()}
                       scrollProgress={localScroll}
-                      startProgress={0}
-                      endProgress={0.14}
+                      startProgress={IMAGE_FAN_SCROLL.TITLE.PREFIX[0]}
+                      endProgress={IMAGE_FAN_SCROLL.TITLE.PREFIX[1]}
                     />
                   )}
                   <LetterReveal
                     text={highlightWord}
                     scrollProgress={localScroll}
-                    startProgress={0.06}
-                    endProgress={0.22}
+                    startProgress={IMAGE_FAN_SCROLL.TITLE.HIGHLIGHT[0]}
+                    endProgress={IMAGE_FAN_SCROLL.TITLE.HIGHLIGHT[1]}
                     className="text-transparent bg-clip-text"
                     style={{
-                      backgroundImage: 'linear-gradient(90deg, #F18E48 0%, #ff4d4d 50%, #c026d3 100%)',
+                      backgroundImage: GRADIENTS.brand,
                     }}
                   />
                   {suffixPart.trim() && (
                     <LetterReveal
                       text={suffixPart.trim()}
                       scrollProgress={localScroll}
-                      startProgress={0.12}
-                      endProgress={0.26}
+                      startProgress={IMAGE_FAN_SCROLL.TITLE.SUFFIX[0]}
+                      endProgress={IMAGE_FAN_SCROLL.TITLE.SUFFIX[1]}
                     />
                   )}
                 </div>
@@ -95,8 +78,8 @@ const ImageFan = ({
                 <LetterReveal
                   text={title}
                   scrollProgress={localScroll}
-                  startProgress={0}
-                  endProgress={0.18}
+                  startProgress={IMAGE_FAN_SCROLL.TITLE.FALLBACK[0]}
+                  endProgress={IMAGE_FAN_SCROLL.TITLE.FALLBACK[1]}
                 />
               )}
             </motion.h3>
@@ -109,18 +92,18 @@ const ImageFan = ({
               const offset = index - centerIndex
               const isHovered = hoveredIndex === index
               
-              const currentSpacing = isMobile ? MOBILE_SPACING : SPACING
+              const currentSpacing = isMobile ? IMAGE_FAN.MOBILE_SPACING : IMAGE_FAN.SPACING
               
               let extraShift = 0
               if (hoveredIndex !== null && index !== hoveredIndex) {
-                const pushDistance = isMobile ? 40 : 80 
+                const pushDistance = isMobile ? IMAGE_FAN.HOVER_PUSH.MOBILE : IMAGE_FAN.HOVER_PUSH.DESKTOP
                 if (index < hoveredIndex) extraShift = -pushDistance
                 if (index > hoveredIndex) extraShift = pushDistance
               }
 
-              const rotation = isHovered ? 0 : offset * ROTATION_STRENGTH 
+              const rotation = isHovered ? 0 : offset * IMAGE_FAN.ROTATION_STRENGTH 
               const translateX = (offset * currentSpacing) + extraShift
-              const translateY = isHovered ? -40 : Math.abs(offset) * ARCH_STRENGTH 
+              const translateY = isHovered ? -40 : Math.abs(offset) * IMAGE_FAN.ARCH_STRENGTH 
               
               const scale = isHovered ? 1.15 : 1 - Math.abs(offset) * 0.05
               const zIndex = isHovered ? 50 : 10 - Math.abs(offset)
@@ -151,11 +134,10 @@ const ImageFan = ({
                   }}
                   transition={{
                     type: 'spring',
-                    stiffness: 260, // Increased stiffness (was 220)
-                    damping: 20,    // Increased damping (was 16) to prevent wobble
-                    mass: 1,
-                    // 3. UPDATED DELAY: Reduced from 0.12 to 0.05 for "rapid fire" effect
-                    delay: shouldAnimateIn ? index * 0.05 : 0 
+                    stiffness: IMAGE_FAN.SPRING.STIFFNESS,
+                    damping: IMAGE_FAN.SPRING.DAMPING,
+                    mass: IMAGE_FAN.SPRING.MASS,
+                    delay: shouldAnimateIn ? index * IMAGE_FAN.SPRING.DELAY_INCREMENT : 0 
                   }}
                   whileHover={{
                     boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",

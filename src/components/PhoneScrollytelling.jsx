@@ -3,27 +3,11 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-mot
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
 import BubbleReveal from './BubbleReveal'
+import { featureCards } from '../constants/featureCards'
+import { PHONE_SCROLL } from '../constants/animations'
+import { GRADIENTS } from '../constants/colors'
 
 const FEATURE_CARD_HEIGHT = 'min-h-[330px]'
-
-// ... featureCards array ...
-const featureCards = [
-  {
-    title: 'Daily Prompts',
-    description: 'Pick one of three whimsical prompts to spark everyday creativity.',
-    gradient: 'from-orange-500 to-amber-500',
-  },
-  {
-    title: 'Share & Compare',
-    description: 'See how friends interpreted the same prompt in real time.',
-    gradient: 'from-orange-500 to-red-500',
-  },
-  {
-    title: 'Streaks & Awards',
-    description: 'Build streaks and climb the upcoming community leaderboard.',
-    gradient: 'from-orange-400 to-orange-600',
-  },
-]
 
 const PhoneScrollytelling = ({ textColor }) => {
   const phoneSectionRef = useRef(null)
@@ -32,18 +16,18 @@ const PhoneScrollytelling = ({ textColor }) => {
     offset: ["start start", "end end"]
   })
 
-  // --- EXISTING ANIMATIONS ---
-  const phoneOpacity = useTransform(phoneScroll, [0, 0.1], [0, 1])
-  const phoneScale = useTransform(phoneScroll, [0, 0.1], [0.9, 1])
-  const phoneX = useTransform(phoneScroll, [0.1, 0.3], ["0%", "-25vw"])
+  // Phone animations
+  const phoneOpacity = useTransform(phoneScroll, PHONE_SCROLL.FADE_IN, [0, 1])
+  const phoneScale = useTransform(phoneScroll, PHONE_SCROLL.FADE_IN, [0.9, 1])
+  const phoneX = useTransform(phoneScroll, PHONE_SCROLL.MOVE_LEFT, ["0%", "-25vw"])
 
-  // Text Animations
-  const t1Y = useTransform(phoneScroll, [0.3, 0.4], [20, 0])
-  const t2Y = useTransform(phoneScroll, [0.4, 0.5], [20, 0])
-  const glowOpacity = useTransform(phoneScroll, [0.4, 0.45], [0, 1])
-  const t3Y = useTransform(phoneScroll, [0.5, 0.6], [20, 0])
+  // Text animations
+  const t1Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_1, [20, 0])
+  const t2Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_2, [20, 0])
+  const glowOpacity = useTransform(phoneScroll, PHONE_SCROLL.GLOW, [0, 1])
+  const t3Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_3, [20, 0])
 
-  // Feature Cards logic
+  // Feature cards logic
   const featureThresholds = [0.6, 0.65, 0.70]
   const featureYTransforms = [
     useTransform(phoneScroll, [0.6, 0.65], [20, 0]),
@@ -60,12 +44,10 @@ const PhoneScrollytelling = ({ textColor }) => {
     })
   })
 
-  // --- THE EXIT ANIMATION ---
-  // From 85% to 100% of the scroll, fade everything out and push it up
-  // This clears the screen for the ImageFan to enter
-  const exitOpacity = useTransform(phoneScroll, [0.90, 0.99], [1, 0])
-  const exitScale = useTransform(phoneScroll, [0.90, 0.99], [1, 0.95])
-  const exitY = useTransform(phoneScroll, [0.90, 0.99], [0, -100])
+  // Exit animation - clears screen for ImageFan to enter
+  const exitOpacity = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0])
+  const exitScale = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0.95])
+  const exitY = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [0, -100])
 
   return (
     <section
@@ -89,8 +71,8 @@ const PhoneScrollytelling = ({ textColor }) => {
               <PhoneMockup
                 imageSrc="/long_screenshot.png"
                 scrollProgress={phoneScroll}
-                scrollStart={0.3}
-                scrollEnd={0.85}
+                scrollStart={PHONE_SCROLL.IMAGE_SCROLL.START}
+                scrollEnd={PHONE_SCROLL.IMAGE_SCROLL.END}
               />
             </div>
           </motion.div>
@@ -104,8 +86,8 @@ const PhoneScrollytelling = ({ textColor }) => {
                 <LetterReveal
                   text="Daily Prompts."
                   scrollProgress={phoneScroll}
-                  startProgress={0.3}
-                  endProgress={0.4}
+                  startProgress={PHONE_SCROLL.TEXT_1[0]}
+                  endProgress={PHONE_SCROLL.TEXT_1[1]}
                   style={{ color: textColor }}
                 />
               </motion.div>
@@ -115,7 +97,7 @@ const PhoneScrollytelling = ({ textColor }) => {
                   className="absolute -inset-12 -z-10 pointer-events-none"
                   style={{
                     opacity: glowOpacity,
-                    background: 'linear-gradient(90deg, rgba(241, 142, 72, 0.5) 0%, rgba(255, 77, 77, 0.5) 50%, rgba(192, 38, 211, 0.5) 100%)',
+                    background: GRADIENTS.glow,
                     filter: 'blur(80px)',
                   }}
                 />
@@ -123,8 +105,8 @@ const PhoneScrollytelling = ({ textColor }) => {
                   <LetterReveal
                     text="Unfiltered Connections."
                     scrollProgress={phoneScroll}
-                    startProgress={0.4}
-                    endProgress={0.5}
+                    startProgress={PHONE_SCROLL.TEXT_2[0]}
+                    endProgress={PHONE_SCROLL.TEXT_2[1]}
                   />
                 </div>
               </motion.div>
@@ -134,8 +116,8 @@ const PhoneScrollytelling = ({ textColor }) => {
                 <LetterReveal
                   text="Reveal one of three daily photo prompts. No algorithms, no influencers—just you and your friends capturing life as it happens."
                   scrollProgress={phoneScroll}
-                  startProgress={0.5}
-                  endProgress={0.6}
+                  startProgress={PHONE_SCROLL.TEXT_3[0]}
+                  endProgress={PHONE_SCROLL.TEXT_3[1]}
                   style={{ color: textColor }}
                 />
               </motion.div>

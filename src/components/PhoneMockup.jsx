@@ -1,84 +1,43 @@
-import { motion, useTransform, useMotionValue, animate } from 'framer-motion'
-import { useEffect } from 'react'
+import { motion, useTransform } from 'framer-motion'
+import { useGlowAnimation } from '../hooks/useGlowAnimation'
+import { PHONE_MOCKUP, PHONE_SCROLL } from '../constants/animations'
+import { COLORS } from '../constants/colors'
 
-const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 0.85 }) => {
+const PhoneMockup = ({ 
+  imageSrc, 
+  scrollProgress, 
+  scrollStart = PHONE_SCROLL.IMAGE_SCROLL.START, 
+  scrollEnd = PHONE_SCROLL.IMAGE_SCROLL.END 
+}) => {
   // Calculate image scroll translation
-  // The image should scroll from top (0) to reveal more content below
-  // The long screenshot will scroll upward (negative translateY) as user scrolls
-  // scrollStart: when phone is fully moved to the left (30% = 0.3)
-  // scrollEnd: when image has finished scrolling (85% = 0.85)
-  // Using pixel-based translation - adjust maxScrollDistance based on your image height
-  const maxScrollDistance = -2500 // Adjust this value based on the height of the long_screenshot.png image
   const imageTranslateY = useTransform(
     scrollProgress,
     [scrollStart, scrollEnd],
-    [0, maxScrollDistance]
+    [0, PHONE_MOCKUP.MAX_SCROLL_DISTANCE]
   )
 
   // Fade out image and fade in logo near the end
-  // Start transition at 75% of scrollEnd, complete at scrollEnd
-  const fadeStart = scrollEnd * 0.90
+  const fadeStart = scrollEnd * PHONE_SCROLL.FADE_TRANSITION
   const imageOpacity = useTransform(scrollProgress, [fadeStart, scrollEnd], [1, 0])
   const logoOpacity = useTransform(scrollProgress, [fadeStart, scrollEnd], [0, 1])
   const logoScale = useTransform(scrollProgress, [fadeStart, scrollEnd], [0.1, 0.65])
   
-  // Background color transition from deep navy to warm off-white for smoother reveal
-  const backgroundColor = useTransform(scrollProgress, [fadeStart, scrollEnd], ['#090D1F', '#F0DFCC'])
+  // Background color transition from deep navy to warm off-white
+  const backgroundColor = useTransform(
+    scrollProgress, 
+    [fadeStart, scrollEnd], 
+    [COLORS.deepNavy, COLORS.warmOffWhite]
+  )
 
-  // Glow effect during phone fade-in (0 to 0.1 scroll progress)
-  const glowOpacity = useTransform(scrollProgress, [0, 0.1], [0, 1.2])
-  const glowIntensity = useTransform(scrollProgress, [0, 0.1], [0, 1])
-  // Tighter glow - closer to phone size
-  const glowScale1 = useTransform(glowIntensity, [0, 1], [1.05, 1.15])
-  const glowScale2 = useTransform(glowIntensity, [0, 1], [1.08, 1.18])
-  
-  // Animated gradient position for flowy effect - use continuous rotation for smooth loop
-  const gradientRotation = useMotionValue(0)
-  
-  // Create animated gradient backgrounds with higher opacity for brightness
-  // Normalize rotation to 0-360 range for smooth calculations
-  const normalizedRotation = useTransform(gradientRotation, (r) => {
-    // Normalize to 0-360 range smoothly
-    const normalized = ((r % 360) + 360) % 360
-    return normalized
-  })
-  
-  const gradientBg1 = useTransform(
+  // Glow effect during phone fade-in
+  const {
+    glowOpacity,
+    glowScale1,
+    glowScale2,
+    gradientBg1,
+    gradientBg2,
     normalizedRotation,
-    (r) => {
-      const angle = r * Math.PI / 180
-      const x = 50 + 20 * Math.cos(angle)
-      const y = 50 + 20 * Math.sin(angle)
-      return `radial-gradient(circle at ${x}% ${y}%, rgba(241, 142, 72, 0.9) 0%, rgba(255, 77, 77, 0.7) 25%, rgba(192, 38, 211, 0.5) 50%, transparent 75%)`
-    }
-  )
-  
-  const gradientBg2 = useTransform(
-    normalizedRotation,
-    (r) => {
-      const angle = (r + 120) * Math.PI / 180
-      const x = 50 + 20 * Math.cos(angle)
-      const y = 50 + 20 * Math.sin(angle)
-      return `radial-gradient(circle at ${x}% ${y}%, rgba(192, 38, 211, 0.8) 0%, rgba(255, 77, 77, 0.6) 30%, transparent 60%)`
-    }
-  )
-  
-  useEffect(() => {
-    // Use continuous animation that never resets - let it grow infinitely
-    let animationFrame
-    let startTime = performance.now()
-    
-    const animate = () => {
-      const elapsed = (performance.now() - startTime) / 1000
-      // Continuous rotation - grows infinitely, no reset
-      const rotation = elapsed * 36 // 36 degrees per second
-      gradientRotation.set(rotation)
-      animationFrame = requestAnimationFrame(animate)
-    }
-    
-    animationFrame = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(animationFrame)
-  }, [gradientRotation])
+  } = useGlowAnimation(scrollProgress)
 
   return (
     <motion.div
@@ -90,7 +49,7 @@ const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 
         className="absolute inset-0 -z-10 rounded-[3rem] pointer-events-none overflow-hidden"
         style={{
           opacity: glowOpacity,
-          filter: `blur(35px)`,
+          filter: `blur(${PHONE_MOCKUP.GLOW.BLUR})`,
         }}
       >
         <motion.div
