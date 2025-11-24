@@ -1,4 +1,5 @@
-import { motion, useTransform } from 'framer-motion'
+import { motion, useTransform, useMotionValue, animate } from 'framer-motion'
+import { useEffect } from 'react'
 
 const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 0.85 }) => {
   // Calculate image scroll translation
@@ -24,11 +25,82 @@ const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 
   // Background color transition from deep navy to warm off-white for smoother reveal
   const backgroundColor = useTransform(scrollProgress, [fadeStart, scrollEnd], ['#090D1F', '#F0DFCC'])
 
+  // Glow effect during phone fade-in (0 to 0.1 scroll progress)
+  const glowOpacity = useTransform(scrollProgress, [0, 0.1], [0, 1.2])
+  const glowIntensity = useTransform(scrollProgress, [0, 0.1], [0, 1])
+  // Tighter glow - closer to phone size
+  const glowScale1 = useTransform(glowIntensity, [0, 1], [1.05, 1.15])
+  const glowScale2 = useTransform(glowIntensity, [0, 1], [1.08, 1.18])
+  
+  // Animated gradient position for flowy effect - use continuous rotation for smooth loop
+  const gradientRotation = useMotionValue(0)
+  
+  // Create animated gradient backgrounds with higher opacity for brightness
+  const gradientBg1 = useTransform(
+    gradientRotation,
+    (r) => {
+      const angle = (r % 360) * Math.PI / 180
+      const x = 50 + 20 * Math.cos(angle)
+      const y = 50 + 20 * Math.sin(angle)
+      return `radial-gradient(circle at ${x}% ${y}%, rgba(241, 142, 72, 0.9) 0%, rgba(255, 77, 77, 0.7) 25%, rgba(192, 38, 211, 0.5) 50%, transparent 75%)`
+    }
+  )
+  
+  const gradientBg2 = useTransform(
+    gradientRotation,
+    (r) => {
+      const angle = ((r + 120) % 360) * Math.PI / 180
+      const x = 50 + 20 * Math.cos(angle)
+      const y = 50 + 20 * Math.sin(angle)
+      return `radial-gradient(circle at ${x}% ${y}%, rgba(192, 38, 211, 0.8) 0%, rgba(255, 77, 77, 0.6) 30%, transparent 60%)`
+    }
+  )
+  
+  useEffect(() => {
+    let animationFrame
+    let startTime = Date.now()
+    
+    const animate = () => {
+      const elapsed = (Date.now() - startTime) / 1000
+      const rotation = (elapsed * 36) % 360 // 36 degrees per second = 10 seconds per full rotation
+      gradientRotation.set(rotation)
+      animationFrame = requestAnimationFrame(animate)
+    }
+    
+    animationFrame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationFrame)
+  }, [gradientRotation])
+
   return (
     <motion.div
       className="relative perspective-1000"
       style={{ perspective: '1000px' }}
     >
+      {/* Flowy Glow Effect - Multiple layers for depth */}
+      <motion.div
+        className="absolute inset-0 -z-10 rounded-[3rem] pointer-events-none overflow-hidden"
+        style={{
+          opacity: glowOpacity,
+          filter: `blur(35px)`,
+        }}
+      >
+        <motion.div
+          className="absolute inset-0 rounded-[3rem]"
+          style={{
+            background: gradientBg1,
+            scale: glowScale1,
+          }}
+        />
+        <motion.div
+          className="absolute inset-0 rounded-[3rem]"
+          style={{
+            background: gradientBg2,
+            scale: glowScale2,
+            rotate: useTransform(gradientRotation, (r) => r * 0.5),
+          }}
+        />
+      </motion.div>
+      
       <motion.div
         whileHover={{ rotateY: 5, rotateX: 5 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}

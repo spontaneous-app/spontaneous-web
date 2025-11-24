@@ -13,8 +13,8 @@ export const useScrollAnimations = () => {
   // Background Transition
   const backgroundColor = useTransform(
     globalScroll,
-    [0, 0.10, 0.7, 0.80], 
-    ["#FFEFE0", "#0f172a", "#0f172a", "#0f172a"]
+    [0, 0.15, 0.75, 0.80], 
+    ["#FFEFE0", "#090D1F", "#090D1F", "#090D1F"]
   )
   
   // Text Color Transition
