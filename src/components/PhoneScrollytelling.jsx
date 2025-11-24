@@ -4,6 +4,8 @@ import { Lightbulb, Share2, Award } from 'lucide-react'
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
 
+const FEATURE_CARD_HEIGHT = 'min-h-[330px]'
+
 const featureCards = [
   {
     icon: Lightbulb,
@@ -92,7 +94,6 @@ const PhoneScrollytelling = ({ textColor }) => {
           </motion.div>
 
           {/* RIGHT TEXT BLOCK */}
-          {/* ALIGNMENT FIX: Changed top-1/2 to top-[25vh] to align with top of phone */}
           <div
             className="absolute w-full md:w-1/2 right-0 top-[18vh] px-8 md:pl-16 z-10 pointer-events-none"
           >
@@ -165,7 +166,7 @@ const PhoneScrollytelling = ({ textColor }) => {
               </motion.div>
 
               {/* Feature Callouts */}
-              <div className="mt-10 flex flex-col gap-4">
+              <div className="mt-10 flex flex-col md:flex-row gap-4 md:gap-6 w-full">
                 {featureCards.map((feature, index) => {
                   const Icon = feature.icon
                   const animation = featureAnimations[index]
@@ -173,15 +174,23 @@ const PhoneScrollytelling = ({ textColor }) => {
                     <motion.div
                       key={feature.title}
                       style={{ opacity: animation.opacity, y: animation.y }}
-                      className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg"
+                      className={`relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg flex-1 ${FEATURE_CARD_HEIGHT}`}
                     >
                       <div className={`inline-flex items-center justify-center p-3 rounded-xl bg-gradient-to-br ${feature.gradient} text-white mb-4 shadow-lg`}>
                         <Icon className="w-5 h-5" />
                       </div>
-                      <h4 className="text-xl font-semibold mb-2 text-white">{feature.title}</h4>
-                      <p className="text-sm text-white/80 leading-relaxed">
+                      <motion.h4 
+                        className="text-xl font-semibold mb-2"
+                        style={{ color: textColor }}
+                      >
+                        {feature.title}
+                      </motion.h4>
+                      <motion.p 
+                        className="text-sm leading-relaxed"
+                        style={{ color: textColor, opacity: 0.8 }}
+                      >
                         {feature.description}
-                      </p>
+                      </motion.p>
                       <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${feature.gradient} opacity-0 blur-2xl -z-10`} />
                     </motion.div>
                   )

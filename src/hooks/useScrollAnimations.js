@@ -20,7 +20,7 @@ export const useScrollAnimations = () => {
   // Text Color Transition
   const textColor = useTransform(
     globalScroll,
-    [0, 0.15, 0.7, 0.75], 
+    [0, 0.15, 0.7, 0.70], 
     ["#0f172a", "#f8fafc", "#f8fafc", "#0f172a"]
   )
 
