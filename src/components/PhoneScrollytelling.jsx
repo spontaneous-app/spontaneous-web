@@ -56,25 +56,121 @@ const PhoneScrollytelling = ({ textColor }) => {
   const exitScale = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0.95])
   const exitY = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [0, -100])
 
+  // Mobile: Render as normal scrollable section
+  if (isMobile) {
+    return (
+      <section
+        ref={phoneSectionRef}
+        className="relative w-full py-20 px-4"
+      >
+        <div className="max-w-2xl mx-auto flex flex-col items-center gap-12">
+          {/* PHONE */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="relative z-20 flex-shrink-0"
+          >
+            <div className="scale-100 shadow-2xl shadow-orange-500/20 rounded-[3rem]">
+              <PhoneMockup
+                imageSrc="/long_screenshot.png"
+                scrollProgress={phoneScroll}
+                scrollStart={PHONE_SCROLL.IMAGE_SCROLL.START}
+                scrollEnd={PHONE_SCROLL.IMAGE_SCROLL.END}
+              />
+            </div>
+          </motion.div>
+
+          {/* TEXT BLOCK */}
+          <div className="w-full text-center flex flex-col gap-6">
+
+            {/* HEADERS */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl sm:text-5xl font-bold leading-tight"
+              style={{ color: textColor }}
+            >
+              Daily Prompts.
+            </motion.h2>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="relative text-2xl sm:text-3xl font-semibold inline-block"
+            >
+              <motion.div
+                className="absolute -inset-12 -z-10 pointer-events-none"
+                style={{
+                  background: GRADIENTS.glow,
+                  filter: 'blur(80px)',
+                }}
+              />
+              <div className="relative z-0 bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 bg-clip-text text-transparent">
+                Unfiltered Connections.
+              </div>
+            </motion.div>
+
+            {/* DESCRIPTION */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg sm:text-xl opacity-80 leading-relaxed"
+              style={{ color: textColor }}
+            >
+              Reveal one of three daily photo prompts. No algorithms, no influencers—just you and your friends capturing life as it happens.
+            </motion.p>
+
+            {/* FEATURES */}
+            <div className="mt-10 flex flex-col gap-4 w-full">
+              {featureCards.map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                  className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg"
+                >
+                  <h4 className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text`}>
+                    {feature.title}
+                  </h4>
+                  <p className="text-sm leading-relaxed" style={{ color: textColor, opacity: 0.8 }}>
+                    {feature.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // Desktop: Original sticky scrollytelling behavior
   return (
     <section
       ref={phoneSectionRef}
-      // Keep height tall (350vh) to allow enough time for reading
       className="relative h-[400vh]"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">
         {/* WRAP EVERYTHING IN THIS EXIT CONTAINER */}
         <motion.div
           style={{ opacity: exitOpacity, scale: exitScale, y: exitY }}
-          className={`relative w-full max-w-7xl mx-auto h-full flex ${
-            isMobile ? 'flex-col items-center justify-start' : 'items-center justify-center'
-          }`}
+          className="relative w-full max-w-7xl mx-auto h-full flex items-center justify-center"
         >
 
           {/* PHONE */}
           <motion.div
             style={{ opacity: phoneOpacity, x: phoneX, scale: phoneScale }}
-            className={`relative z-20 flex-shrink-0 ${isMobile ? 'mt-8 mb-4' : ''}`}
+            className="relative z-20 flex-shrink-0"
           >
             <div className="scale-100 sm:scale-110 md:scale-125 shadow-2xl shadow-orange-500/20 rounded-[3rem]">
               <PhoneMockup
@@ -86,17 +182,9 @@ const PhoneScrollytelling = ({ textColor }) => {
             </div>
           </motion.div>
 
-          {/* TEXT BLOCK - Positioned differently on mobile vs desktop */}
-          <div className={`${
-            isMobile 
-              ? 'relative w-full px-4 mt-4' 
-              : 'absolute w-full md:w-1/2 right-0 top-[18vh] px-8 md:pl-16'
-          } z-10 pointer-events-none`}>
-            <div className={`max-w-lg ${
-              isMobile 
-                ? 'mx-auto text-center' 
-                : 'ml-auto md:ml-0 text-center md:text-left md:p-0'
-            } flex flex-col gap-6`}>
+          {/* RIGHT TEXT BLOCK */}
+          <div className="absolute w-full md:w-1/2 right-0 top-[18vh] px-8 md:pl-16 z-10 pointer-events-none">
+            <div className="max-w-lg ml-auto md:ml-0 text-center md:text-left md:p-0 flex flex-col gap-6">
 
               {/* HEADERS */}
               <motion.div style={{ y: t1Y }} className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
