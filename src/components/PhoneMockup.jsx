@@ -16,13 +16,13 @@ const PhoneMockup = ({ imageSrc, scrollProgress, scrollStart = 0.3, scrollEnd = 
 
   // Fade out image and fade in logo near the end
   // Start transition at 75% of scrollEnd, complete at scrollEnd
-  const fadeStart = scrollEnd * 0.5
+  const fadeStart = scrollEnd * 0.90
   const imageOpacity = useTransform(scrollProgress, [fadeStart, scrollEnd], [1, 0])
   const logoOpacity = useTransform(scrollProgress, [fadeStart, scrollEnd], [0, 1])
-  const logoScale = useTransform(scrollProgress, [fadeStart, scrollEnd], [0.2, 0.65])
+  const logoScale = useTransform(scrollProgress, [fadeStart, scrollEnd], [0.1, 0.65])
   
   // Background color transition from deep navy to warm off-white for smoother reveal
-  const backgroundColor = useTransform(scrollProgress, [fadeStart, scrollEnd], ['#090D1F', '#FFEFE0'])
+  const backgroundColor = useTransform(scrollProgress, [fadeStart, scrollEnd], ['#090D1F', '#F0DFCC'])
 
   return (
     <motion.div

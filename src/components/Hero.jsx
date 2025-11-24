@@ -1,20 +1,23 @@
 import { motion } from 'framer-motion'
-import { Sparkles } from 'lucide-react'
 import AppStoreButtons from './AppStoreButtons'
 
 const Hero = () => {
   return (
     <div className="relative z-10 flex flex-col items-center text-center pt-20 pb-10">
       
-      {/* 1. LOGO: Better placeholder with gradient & border */}
+      {/* 1. LOGO */}
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="mb-8"
       >
-        <div className="w-24 h-24 bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl shadow-2xl shadow-orange-500/20 flex items-center justify-center rotate-3 hover:rotate-6 transition-transform border-4 border-white/50 backdrop-blur-xl">
-           <Sparkles className="w-12 h-12 text-white drop-shadow-md" />
+        <div className="w-28 h-28 rounded-[2.5rem] shadow-2xl shadow-orange-500/30 flex items-center justify-center rotate-3 hover:rotate-6 transition-transform border-4 border-white/60 bg-white/80 backdrop-blur-xl">
+          <img 
+            src="/logo.png" 
+            alt="Spontaneous logo" 
+            className="w-20 h-auto drop-shadow-2xl"
+          />
         </div>
       </motion.div>
 
