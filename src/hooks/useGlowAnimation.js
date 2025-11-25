@@ -16,14 +16,11 @@ export const useGlowAnimation = (scrollProgress) => {
   const glowScale1 = useTransform(glowIntensity, [0, 1], PHONE_MOCKUP.GLOW.SCALE_1)
   const glowScale2 = useTransform(glowIntensity, [0, 1], PHONE_MOCKUP.GLOW.SCALE_2)
 
-  // Animated gradient position for flowy effect
+  // Animated gradient position
   const gradientRotation = useMotionValue(0)
 
-  // Normalize rotation to 0-360 range for smooth calculations
-  const normalizedRotation = useTransform(gradientRotation, (r) => {
-    const normalized = ((r % 360) + 360) % 360
-    return normalized
-  })
+  // identity transform, because a normalized roation causes cuts for some reason
+  const normalizedRotation = useTransform(gradientRotation, (v) => v)
 
   // Create animated gradient backgrounds
   const gradientBg1 = useTransform(normalizedRotation, (r) => {
@@ -64,4 +61,3 @@ export const useGlowAnimation = (scrollProgress) => {
     normalizedRotation,
   }
 }
-

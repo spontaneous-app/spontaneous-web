@@ -215,7 +215,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
               className="relative text-2xl sm:text-3xl font-semibold inline-block"
             >
               <motion.div
-                // FIXED: Added rounded-full to prevent rectangular glow on Safari
                 className="absolute -inset-12 -z-10 pointer-events-none rounded-full"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -223,7 +222,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
                 style={{
                   background: GRADIENTS.glow,
                   filter: 'blur(80px)',
-                  // Safari Fix: helps with rendering complex blurs
                   transform: 'translateZ(0)',
                 }}
               />
@@ -299,7 +297,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
 
               <motion.div style={{ y: t2Y }} className="relative text-2xl sm:text-4xl font-semibold inline-block">
                 <motion.div
-                  // FIXED: Added rounded-full here as well
                   className="absolute -inset-12 -z-10 pointer-events-none rounded-full"
                   style={{
                     opacity: glowOpacity,
@@ -343,7 +340,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
                       gradient={feature.gradient}
                     >
                       {/* CARD CONTAINER (Premium Effects) */}
-                      {/* CHANGE: Reduced padding (p-5 md:p-6 -> p-4 md:p-5) to make shorter */}
                       <div className="group relative w-full rounded-2xl border border-white/10 bg-gray-900/20 backdrop-blur-xl p-4 md:p-5 text-left shadow-lg overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-2xl">
 
                         {/* 1. AMBIENT LIGHTING (The Premium Glow) */}
