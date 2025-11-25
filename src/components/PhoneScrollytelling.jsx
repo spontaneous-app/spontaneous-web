@@ -215,13 +215,16 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
               className="relative text-2xl sm:text-3xl font-semibold inline-block"
             >
               <motion.div
-                className="absolute -inset-12 -z-10 pointer-events-none"
+                // FIXED: Added rounded-full to prevent rectangular glow on Safari
+                className="absolute -inset-12 -z-10 pointer-events-none rounded-full"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 style={{
                   background: GRADIENTS.glow,
                   filter: 'blur(80px)',
+                  // Safari Fix: helps with rendering complex blurs
+                  transform: 'translateZ(0)',
                 }}
               />
               <div className="relative z-0 bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 bg-clip-text text-transparent">
@@ -296,11 +299,13 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
 
               <motion.div style={{ y: t2Y }} className="relative text-2xl sm:text-4xl font-semibold inline-block">
                 <motion.div
-                  className="absolute -inset-12 -z-10 pointer-events-none"
+                  // FIXED: Added rounded-full here as well
+                  className="absolute -inset-12 -z-10 pointer-events-none rounded-full"
                   style={{
                     opacity: glowOpacity,
                     background: GRADIENTS.glow,
                     filter: 'blur(80px)',
+                    transform: 'translateZ(0)',
                   }}
                 />
                 <div className="relative z-0 bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 bg-clip-text text-transparent">
