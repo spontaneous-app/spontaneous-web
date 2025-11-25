@@ -2,7 +2,7 @@ import { useRef, useState, forwardRef } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent, useInView } from 'framer-motion'
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
-import BubbleReveal from './BubbleReveal'
+import IceCubeFeatureCard from './IceCubeFeatureCard'
 import { featureCards } from '../constants/featureCards'
 import { PHONE_SCROLL } from '../constants/animations'
 import { GRADIENTS } from '../constants/colors'
@@ -20,26 +20,12 @@ const MobileFeatureCard = ({ feature, index }) => {
   
   return (
     <div ref={cardRef} className="w-full">
-      <BubbleReveal
-        delay={index * 0.15}
+      <IceCubeFeatureCard
+        feature={feature}
+        index={index}
         isActive={isInView}
-        className="w-full"
-        gradient={feature.gradient}
-      >
-        <div className="group relative w-full rounded-2xl border border-white/10 bg-gray-900/20 backdrop-blur-xl p-5 text-left shadow-lg overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-2xl">
-          <div className={`absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br ${feature.gradient} blur-[40px] opacity-20 group-hover:opacity-40 group-hover:scale-125 transition-all duration-700`} />
-          <div className={`absolute -bottom-16 -left-16 w-32 h-32 rounded-full bg-gradient-to-tr ${feature.gradient} blur-[40px] opacity-10 group-hover:opacity-30 group-hover:scale-125 transition-all duration-700`} />
-          <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-          <div className="relative z-10">
-            <h4 className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text drop-shadow-sm`}>
-              {feature.title}
-            </h4>
-            <p className="text-sm leading-relaxed text-white" style={{ opacity: 0.9 }}>
-              {feature.description}
-            </p>
-          </div>
-        </div>
-      </BubbleReveal>
+        delay={index * 0.15}
+      />
     </div>
   )
 }
@@ -291,34 +277,20 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
                 />
               </motion.div>
 
-              <div className="mt-4 flex flex-col gap-4 w-full">
+              <div className="mt-4 flex flex-col gap-3 w-full">
                 {featureCards.map((feature, index) => {
                   const yTransform = featureYTransforms[index] || featureYTransforms[0]
                   return (
-                    <BubbleReveal
+                    <IceCubeFeatureCard
                       key={feature.title}
-                      delay={index * 0.15}
+                      feature={feature}
+                      index={index}
+                      textColor={textColor}
                       isActive={featureActive[index]}
+                      delay={index * 0.15}
                       style={{ y: yTransform }}
-                      className="w-full"
-                      gradient={feature.gradient}
-                    >
-                      <div className="group relative w-full rounded-2xl border border-white/10 bg-gray-900/20 backdrop-blur-xl p-4 md:p-5 text-left shadow-lg overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-2xl">
-                        <div className={`absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br ${feature.gradient} blur-[40px] opacity-20 group-hover:opacity-40 group-hover:scale-125 transition-all duration-700`} />
-                        <div className={`absolute -bottom-16 -left-16 w-32 h-32 rounded-full bg-gradient-to-tr ${feature.gradient} blur-[40px] opacity-10 group-hover:opacity-30 group-hover:scale-125 transition-all duration-700`} />
-                        <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                        <div className="relative z-10 flex flex-col h-full justify-between">
-                          <div>
-                            <motion.h4 className={`text-lg md:text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text drop-shadow-sm`}>
-                              {feature.title}
-                            </motion.h4>
-                            <motion.p className="text-sm leading-relaxed" style={{ color: textColor, opacity: 0.9 }}>
-                              {feature.description}
-                            </motion.p>
-                          </div>
-                        </div>
-                      </div>
-                    </BubbleReveal>
+                      useMotion={true}
+                    />
                   )
                 })}
               </div>
