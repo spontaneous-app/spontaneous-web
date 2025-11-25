@@ -1,5 +1,5 @@
 import { useRef, useState, forwardRef } from 'react'
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValueEvent, useInView } from 'framer-motion'
 import PhoneMockup from './PhoneMockup'
 import LetterReveal from './LetterReveal'
 import BubbleReveal from './BubbleReveal'
@@ -17,6 +17,53 @@ const MOBILE_IMAGE_SCROLL_START = 0.15
 const MOBILE_IMAGE_SCROLL_END = 0.85
 const MOBILE_PHONE_EXIT_START = 0.85
 const MOBILE_PHONE_EXIT_END = 1.0
+
+// Mobile Feature Card Component
+const MobileFeatureCard = ({ feature, index }) => {
+  const cardRef = useRef(null)
+  const isInView = useInView(cardRef, { once: true, margin: "-50px" })
+  
+  return (
+    <div ref={cardRef} className="w-full">
+      <BubbleReveal
+        delay={index * 0.15}
+        isActive={isInView}
+        className="w-full"
+        gradient={feature.gradient}
+      >
+        {/* MOBILE PREMIUM CARD STYLE */}
+        <div className="group relative w-full rounded-2xl border border-white/10 bg-gray-900/20 backdrop-blur-xl p-5 text-left shadow-lg overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-2xl">
+          
+          {/* AMBIENT LIGHTING */}
+          <div 
+            className={`absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br ${feature.gradient} blur-[40px] opacity-20 group-hover:opacity-40 group-hover:scale-125 transition-all duration-700`} 
+          />
+          <div 
+            className={`absolute -bottom-16 -left-16 w-32 h-32 rounded-full bg-gradient-to-tr ${feature.gradient} blur-[40px] opacity-10 group-hover:opacity-30 group-hover:scale-125 transition-all duration-700`} 
+          />
+
+          {/* SUBTLE BORDER GRADIENT OVERLAY */}
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+          />
+
+          {/* CONTENT */}
+          <div className="relative z-10">
+            <h4 className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text drop-shadow-sm`}>
+              {feature.title}
+            </h4>
+            <p 
+              className="text-sm leading-relaxed text-white" 
+              style={{ opacity: 0.9 }}
+            >
+              {feature.description}
+            </p>
+          </div>
+        </div>
+      </BubbleReveal>
+    </div>
+  )
+}
 
 const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
   const internalRef = useRef(null)
@@ -42,7 +89,6 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
   const phoneX = useTransform(
     phoneScroll,
     PHONE_SCROLL.MOVE_LEFT,
-    // We can use the isMobile variable inside the ARRAY, just not to conditionally run the hook
     isMobile ? ["0%", "0%"] : ["0%", "-25vw"]
   )
 
@@ -51,9 +97,7 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
   const glowOpacity = useTransform(phoneScroll, PHONE_SCROLL.GLOW, [0, 1])
   const t3Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_3, [20, 0])
 
-  // --- MOBILE ANIMATIONS (Must be defined at top level too!) ---
-  // Even if not used in desktop view, these hooks must run to preserve order
-
+  // --- MOBILE ANIMATIONS ---
   const mobilePhoneScale = useTransform(phoneScroll, (latest) => {
     if (latest < MOBILE_PHONE_ENTER_END) {
       const enterProgress = latest / MOBILE_PHONE_ENTER_END
@@ -94,12 +138,10 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
     (y) => `translate(-50%, calc(-50% + ${y}px))`
   )
 
-  // Exit animation
   const exitOpacity = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0])
   const exitScale = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [1, 0.95])
   const exitY = useTransform(phoneScroll, PHONE_SCROLL.EXIT, [0, -100])
 
-  // Feature cards logic
   const featureThresholds = [0.6, 0.65, 0.70]
   const featureYTransforms = [
     useTransform(phoneScroll, [0.6, 0.65], [20, 0]),
@@ -151,7 +193,7 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
           </div>
         </section>
 
-        {/* FEATURE CARDS SECTION */}
+        {/* FEATURE CARDS SECTION (MOBILE) */}
         <section className="relative w-full py-16 px-4" style={{ backgroundColor: 'inherit' }}>
           <div className="max-w-2xl mx-auto flex flex-col items-center gap-8">
             <motion.h2
@@ -200,24 +242,11 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
 
             <div className="mt-8 flex flex-col gap-4 w-full">
               {featureCards.map((feature, index) => (
-                <motion.div
+                <MobileFeatureCard
                   key={feature.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                  className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 text-left shadow-lg"
-                >
-                  <h4 className={`text-xl font-semibold mb-2 bg-gradient-to-r ${feature.gradient} text-transparent bg-clip-text`}>
-                    {feature.title}
-                  </h4>
-                  <p
-                    className="text-sm leading-relaxed text-white"
-                    style={{ color: textColor || 'white', opacity: 0.8 }}
-                  >
-                    {feature.description}
-                  </p>
-                </motion.div>
+                  feature={feature}
+                  index={index}
+                />
               ))}
             </div>
           </div>
@@ -295,7 +324,8 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
               </motion.div>
 
               {/* CONTAINER: Always flex-col (Vertical Stack) */}
-              <div className="mt-8 flex flex-col gap-4 w-full">
+              {/* CHANGE: Reduced mt-8 to mt-4 to move higher */}
+              <div className="mt-4 flex flex-col gap-4 w-full">
                 {featureCards.map((feature, index) => {
                   const yTransform = featureYTransforms[index] || featureYTransforms[0]
                   return (
@@ -308,7 +338,8 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
                       gradient={feature.gradient}
                     >
                       {/* CARD CONTAINER (Premium Effects) */}
-                      <div className="group relative w-full rounded-2xl border border-white/10 bg-gray-900/20 backdrop-blur-xl p-5 md:p-6 text-left shadow-lg overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-2xl">
+                      {/* CHANGE: Reduced padding (p-5 md:p-6 -> p-4 md:p-5) to make shorter */}
+                      <div className="group relative w-full rounded-2xl border border-white/10 bg-gray-900/20 backdrop-blur-xl p-4 md:p-5 text-left shadow-lg overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-2xl">
 
                         {/* 1. AMBIENT LIGHTING (The Premium Glow) */}
                         <div
