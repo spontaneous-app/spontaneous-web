@@ -94,7 +94,7 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
 
   const t1Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_1, [20, 0])
   const t2Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_2, [20, 0])
-  const glowOpacity = useTransform(phoneScroll, PHONE_SCROLL.GLOW, [0, 1])
+  const glowOpacity = useTransform(phoneScroll, PHONE_SCROLL.GLOW, [0, 0.6])
   const t3Y = useTransform(phoneScroll, PHONE_SCROLL.TEXT_3, [20, 0])
 
   // --- MOBILE ANIMATIONS ---
@@ -297,12 +297,14 @@ const PhoneScrollytelling = forwardRef(({ textColor }, ref) => {
 
               <motion.div style={{ y: t2Y }} className="relative text-2xl sm:text-4xl font-semibold inline-block">
                 <motion.div
-                  className="absolute -inset-12 -z-10 pointer-events-none rounded-full"
+                  className="absolute -z-10 pointer-events-none rounded-full"
                   style={{
                     opacity: glowOpacity,
                     background: GRADIENTS.glow,
-                    filter: 'blur(80px)',
+                    filter: 'blur(30px)',
                     transform: 'translateZ(0)',
+                    width: '77%',
+                    height: '120%',
                   }}
                 />
                 <div className="relative z-0 bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 bg-clip-text text-transparent">
