@@ -1,10 +1,8 @@
 import { motion } from 'framer-motion'
 import BubbleReveal from './BubbleReveal'
 
-// --- 🧊 ICE CUBE CONFIGURATION 🧊 ---
 // Tune these values to control the look of the glass
 const GLASS_CONFIG = {
-  // Transparency: 0.0 is invisible, 1.0 is solid white
   glassOpacityStart: 0.005, // Top-left opacity (The "thickest" part)
   glassOpacityEnd: 0.0,    // Bottom-right opacity (The "clearest" part)
   
@@ -13,6 +11,13 @@ const GLASS_CONFIG = {
 
   // Edge Visibility: The sharp white lines defining the shape
   borderOpacity: 0.35,     // Opacity of the white highlight borders
+
+  // Ambient Color Glows
+  glowBlur: '80px',        // Blur strength for the gradient glows
+  topRightGlowOpacity: 0.2,      // Top-right glow base opacity
+  topRightGlowHoverOpacity: 0.60, // Top-right glow opacity on hover
+  bottomLeftGlowOpacity: 0.15,    // Bottom-left glow base opacity
+  bottomLeftGlowHoverOpacity: 0.60, // Bottom-left glow opacity on hover
 }
 
 const IceCubeFeatureCard = ({ 
@@ -26,28 +31,48 @@ const IceCubeFeatureCard = ({
   useMotion = false 
 }) => {
   return (
-    <BubbleReveal
-      delay={delay}
-      isActive={isActive}
-      style={style}
-      className={className}
-      gradient={feature.gradient}
-    >
-      {/* CARD CONTAINER */}
-      <div 
-        className="group relative w-full h-full rounded-2xl overflow-hidden transition-transform duration-500 hover:scale-[1.02] hover:-translate-y-1"
-        style={{
-          // Complex shadows to simulate 3D thickness
-          boxShadow: `
-            0 20px 40px -10px rgba(0, 0, 0, 0.5),        
-            inset 0 1px 0 0 rgba(255, 255, 255, ${GLASS_CONFIG.borderOpacity}),
-            inset 0 0 20px 2px rgba(0, 0, 0, 0.3),       
-            inset 0 0 2px 0 rgba(255, 255, 255, 0.1)     
-          `,
-          backdropFilter: `blur(${GLASS_CONFIG.blurStrength})`,
-          WebkitBackdropFilter: `blur(${GLASS_CONFIG.blurStrength})`,
-        }}
+    <>
+      <style>{`
+        .glow-top-right {
+          opacity: var(--glow-top-opacity);
+        }
+        .group:hover .glow-top-right {
+          opacity: var(--glow-top-hover-opacity);
+        }
+        .glow-bottom-left {
+          opacity: var(--glow-bottom-opacity);
+        }
+        .group:hover .glow-bottom-left {
+          opacity: var(--glow-bottom-hover-opacity);
+        }
+      `}</style>
+      <BubbleReveal
+        delay={delay}
+        isActive={isActive}
+        style={style}
+        className={className}
+        gradient={feature.gradient}
       >
+        {/* CARD CONTAINER */}
+        <div 
+          className="group relative w-full h-full rounded-2xl overflow-hidden transition-transform duration-500 hover:scale-[1.02] hover:-translate-y-1"
+          style={{
+            // Complex shadows to simulate 3D thickness
+            boxShadow: `
+              0 20px 40px -10px rgba(0, 0, 0, 0.5),        
+              inset 0 1px 0 0 rgba(255, 255, 255, ${GLASS_CONFIG.borderOpacity}),
+              inset 0 0 20px 2px rgba(0, 0, 0, 0.3),       
+              inset 0 0 2px 0 rgba(255, 255, 255, 0.1)     
+            `,
+            backdropFilter: `blur(${GLASS_CONFIG.blurStrength})`,
+            WebkitBackdropFilter: `blur(${GLASS_CONFIG.blurStrength})`,
+            // CSS custom properties for glow opacity values
+            '--glow-top-opacity': GLASS_CONFIG.topRightGlowOpacity,
+            '--glow-top-hover-opacity': GLASS_CONFIG.topRightGlowHoverOpacity,
+            '--glow-bottom-opacity': GLASS_CONFIG.bottomLeftGlowOpacity,
+            '--glow-bottom-hover-opacity': GLASS_CONFIG.bottomLeftGlowHoverOpacity,
+          }}
+        >
         {/* 1. Base Glass Material (Controlled by CONFIG above) */}
         <div 
             className="absolute inset-0 z-0"
@@ -61,10 +86,16 @@ const IceCubeFeatureCard = ({
 
         {/* 3. Ambient Color Glows (The dynamic gradient blobs) */}
         <div 
-          className={`absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br ${feature.gradient} blur-[60px] opacity-20 group-hover:opacity-40 transition-all duration-700 ease-in-out`} 
+          className={`absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br ${feature.gradient} glow-top-right transition-opacity duration-700 ease-in-out`}
+          style={{
+            filter: `blur(${GLASS_CONFIG.glowBlur})`,
+          }}
         />
         <div 
-          className={`absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-gradient-to-tr ${feature.gradient} blur-[60px] opacity-10 group-hover:opacity-30 transition-all duration-700 ease-in-out`} 
+          className={`absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-gradient-to-tr ${feature.gradient} glow-bottom-left transition-opacity duration-700 ease-in-out`}
+          style={{
+            filter: `blur(${GLASS_CONFIG.glowBlur})`,
+          }}
         />
 
         {/* 4. Surface sheen on hover */}
@@ -107,7 +138,8 @@ const IceCubeFeatureCard = ({
            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         </div>
       </div>
-    </BubbleReveal>
+      </BubbleReveal>
+    </>
   )
 }
 
