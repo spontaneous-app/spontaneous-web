@@ -1,4 +1,6 @@
-# Spontaneous - Coming Soon Landing Page
+# Spontaneous - Landing Page
+
+Live site can be found at: https://www.thespontaneousapp.com/
 
 ## Tech Stack
 
